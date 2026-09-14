@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Трекер тренировок — 8 дней</title>
+  <style>
+    :root {
+      --bg: #0f0f12;
+      --card: #1a1a22;
+      --card2: #22222c;
+      --accent: #e8a0bf;
+      --accent2: #c77d9a;
+      --text: #f2f2f5;
+      --muted: #9a9aa8;
+      --border: #2e2e3a;
+      --success: #7dcea0;
+      --warning: #f4d35e;
+      --day1: #6c5ce7;
+      --day2: #00b894;
+      --day3: #e17055;
+      --upper: #0984e3;
+      --rest: #636e72;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+      padding-bottom: 80px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    header h1 span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab:hover { color: var(--text); border-color: var(--accent2); }
+    .tab.active {
+      background: var(--accent);
+      color: #1a1a22;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ===== CALENDAR ===== */
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .cal-header h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .nav-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 6px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day {
+      aspect-ratio: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      font-weight: 500;
+      min-height: 52px;
+    }
+
+    .day:hover { border-color: var(--accent2); transform: translateY(-1px); }
+    .day.other-month { opacity: 0.35; }
+    .day.today { box-shadow: 0 0 0 2px var(--accent); }
+    .day.selected { background: var(--card2); border-color: var(--accent); }
+
+    .day .num { z-index: 1; }
+    .day .badge {
+      position: absolute;
+      bottom: 4px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 6px;
+      line-height: 1.2;
+    }
+    .day.has-note::after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 6px;
+      height: 6px;
+      background: var(--warning);
+      border-radius: 50%;
+    }
+    .day.done {
+      background: #1a2e1a;
+      border-color: var(--success);
+    }
+    .day.done .num {
+      color: var(--success);
+    }
+    .day.done::before {
+      content: "✓";
+      position: absolute;
+      top: 3px;
+      right: 5px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--success);
+      line-height: 1;
+    }
+    .day.done.has-note::after {
+      right: 16px;
+    }
+
+    .badge.d1 { background: var(--day1); color: #fff; }
+    .badge.d2 { background: var(--day2); color: #fff; }
+    .badge.d3 { background: var(--day3); color: #fff; }
+    .badge.upper { background: var(--upper); color: #fff; }
+    .badge.rest { background: var(--rest); color: #fff; }
+    .badge.custom { background: var(--accent2); color: #fff; }
+    .badge.cycle {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.15);
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    /* Day detail modal / side */
+    .day-detail {
+      margin-top: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      display: none;
+    }
+    .day-detail.visible { display: block; }
+
+    .day-detail h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .type-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .type-btn {
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .type-btn.active {
+      font-weight: 600;
+      color: #fff;
+    }
+    .type-btn.d1.active { background: var(--day1); border-color: var(--day1); }
+    .type-btn.d2.active { background: var(--day2); border-color: var(--day2); }
+    .type-btn.d3.active { background: var(--day3); border-color: var(--day3); }
+    .type-btn.upper.active { background: var(--upper); border-color: var(--upper); }
+    .type-btn.rest.active { background: var(--rest); border-color: var(--rest); }
+    .type-btn.custom.active { background: var(--accent2); border-color: var(--accent2); }
+
+    textarea.notes {
+      width: 100%;
+      min-height: 80px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-bottom: 12px;
+    }
+    textarea.notes:focus { outline: none; border-color: var(--accent); }
+
+    .exercise-list {
+      list-style: none;
+      margin: 10px 0 14px;
+    }
+    .exercise-list li {
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+    .exercise-list li .name { flex: 1; }
+    .exercise-list li .sets { color: var(--accent); font-weight: 600; white-space: nowrap; }
+
+    .btn {
+      background: var(--accent);
+      color: #1a1a22;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn.danger { background: #c0392b; color: #fff; }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    /* ===== PLAN ===== */
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .plan-day {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .plan-day-header {
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .plan-day-header.d1 { background: var(--day1); }
+    .plan-day-header.d2 { background: var(--day2); }
+    .plan-day-header.d3 { background: var(--day3); }
+    .plan-day-header.upper { background: var(--upper); }
+    .plan-day-header.rest { background: var(--rest); }
+
+    .plan-day-body { padding: 12px 14px; }
+
+    .ex-item {
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      align-items: start;
+    }
+    .ex-item input, .ex-item textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 0.9rem;
+      resize: none;
+    }
+    .ex-item input:focus, .ex-item textarea:focus { outline: none; }
+    .ex-item .sets-input {
+      width: 70px;
+      text-align: right;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .ex-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .ex-actions button {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .ex-actions button:hover { color: var(--text); border-color: var(--accent2); }
+
+    .add-ex {
+      width: 100%;
+      margin-top: 6px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .add-ex:hover { border-color: var(--accent); color: var(--accent); }
+
+    .note-banner {
+      background: var(--card2);
+      border-left: 4px solid var(--accent);
+      padding: 12px 14px;
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 18px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* ===== CYCLE ===== */
+    .cycle-info {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .cycle-info p { color: var(--muted); font-size: 0.9rem; margin-top: 6px; }
+
+    .cycle-days {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 6px;
+      margin-top: 14px;
+    }
+    @media (max-width: 600px) {
+      .cycle-days { grid-template-columns: repeat(4, 1fr); }
+    }
+    .cycle-day {
+      text-align: center;
+      padding: 10px 4px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .cycle-day.d1 { background: var(--day1); }
+    .cycle-day.d2 { background: var(--day2); }
+    .cycle-day.d3 { background: var(--day3); }
+    .cycle-day.rest { background: var(--rest); }
+    .cycle-day.active-cycle {
+      border-color: #fff;
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+
+    /* ===== STATS / LOG ===== */
+    .log-list { list-style: none; }
+    .log-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .log-item .date { font-weight: 600; }
+    .log-item .type { font-size: 0.85rem; color: var(--muted); }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 20px;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      z-index: 50;
+    }
+    footer button {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    footer button:hover { color: var(--accent); }
+
+    /* Modal for confirm */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      max-width: 360px;
+      width: 100%;
+      border: 1px solid var(--border);
+    }
+    .modal h3 { margin-bottom: 10px; }
+    .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 16px; }
+
+    @media (max-width: 500px) {
+      .day { font-size: 0.85rem; min-height: 46px; border-radius: 10px; }
+      .badge { font-size: 0.55rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Трекер <span>тренировок</span></h1>
+      <div class="tabs">
+        <button class="tab active" data-tab="calendar">Календарь</button>
+        <button class="tab" data-tab="plan">План</button>
+        <button class="tab" data-tab="log">История</button>
+      </div>
+    </header>
+
+    <!-- CALENDAR -->
+    <div id="panel-calendar" class="panel active">
+      <div class="cal-header">
+        <button class="nav-btn" id="prev-month">‹</button>
+        <h2 id="month-title"></h2>
+        <button class="nav-btn" id="next-month">›</button>
+      </div>
+      <div class="weekdays">
+        <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+      </div>
+      <div class="days" id="calendar-days"></div>
+
+      <div class="day-detail" id="day-detail">
+        <h3 id="detail-title"></h3>
+        <div class="type-select" id="type-select">
+          <button class="type-btn d1" data-type="1">День 1</button>
+          <button class="type-btn d2" data-type="2">День 2</button>
+          <button class="type-btn d3" data-type="3">День 3</button>
+          <button class="type-btn upper" data-type="upper">Верх</button>
+          <button class="type-btn rest" data-type="rest">Отдых</button>
+          <button class="type-btn custom" data-type="custom">Своё</button>
+        </div>
+        <div id="detail-exercises"></div>
+        <label style="font-size:0.85rem;color:var(--muted);display:block;margin-bottom:4px;">Заметки / пометки</label>
+        <textarea class="notes" id="day-notes" placeholder="Например: самочувствие, веса, замена упражнения..."></textarea>
+        <div class="btn-row">
+          <button class="btn" id="save-day">Сохранить</button>
+          <button class="btn secondary" id="mark-done">Отметить выполненной</button>
+          <button class="btn secondary" id="clear-day">Очистить день</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAN -->
+    <div id="panel-plan" class="panel">
+      <div class="note-banner">
+        Раз в 1,5–2 месяца в зависимости от прогресса снижаем интенсивность подходов, оставляя в запасе каждые 3 повторения до отказа.<br>
+        План: День 1–3 (низ), Верх, один день Отдыха. 8-дневный цикл отмечается прямо в календаре (Ц1–Ц8). Здесь можно менять упражнения — всё сохраняется автоматически.
+      </div>
+      <div class="plan-grid" id="plan-grid"></div>
+    </div>
+
+    <!-- LOG -->
+    <div id="panel-log" class="panel">
+      <div id="log-content"></div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Данные хранятся только на этом устройстве</span>
+    <button id="export-data">Экспорт</button>
+    <button id="import-data">Импорт</button>
+    <button id="reset-all">Сброс</button>
+  </footer>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h3 id="modal-title">Подтверждение</h3>
+      <p id="modal-text"></p>
+      <div class="btn-row">
+        <button class="btn" id="modal-confirm">Да</button>
+        <button class="btn secondary" id="modal-cancel">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== DEFAULT PLAN (from your image) ==========
+    const DEFAULT_PLAN = {
+      1: {
+        title: "День 1",
+        approaches: "9 подходов",
+        exercises: [
+          { name: "Зашагивания (около отказа 2 повтора)", sets: "3 × 10" },
+          { name: "Жим ногами в растянутой позиции (около отказа 1 повтор)", sets: "2 × 12" },
+          { name: "Отведения в кроссовере диагонально (в отказ)", sets: "2 × 10" },
+          { name: "Гиперэкстензия на ягодицы (в отказ)", sets: "2 × 12" }
+        ]
+      },
+      2: {
+        title: "День 2",
+        approaches: "8 подходов",
+        exercises: [
+          { name: "Жим по одной ноге (около отказа 2 повтора)", sets: "3 × 8" },
+          { name: "Ягодичный мост с дожимом (в отказ)", sets: "3 × 8" },
+          { name: "Кикбэки с кубика (в отказ)", sets: "2 × 12" }
+        ]
+      },
+      3: {
+        title: "День 3",
+        approaches: "10 подходов",
+        exercises: [
+          { name: "Румынская тяга (около отказа 2 повтора)", sets: "3 × 10" },
+          { name: "Мостик (короткая амплитуда – около отказа 1-2 повтора)", sets: "2 × 8" },
+          { name: "Сгибания (в отказ)", sets: "2 × 10" },
+          { name: "Отведения сидя (отклонившись назад – в отказ)", sets: "3 × 12" }
+        ]
+      },
+      upper: {
+        title: "Верх",
+        approaches: "",
+        exercises: [
+          { name: "Добавь упражнения на верх (грудь, спина, плечи, руки)", sets: "—" }
+        ]
+      },
+      rest: {
+        title: "Отдых",
+        approaches: "",
+        exercises: []
+      }
+    };
+
+    // ========== STATE ==========
+    let state = {
+      plan: JSON.parse(JSON.stringify(DEFAULT_PLAN)),
+      calendar: {},          // "YYYY-MM-DD" -> { type: "1"|"2"|"3"|"upper"|"rest"|"custom", notes: "", done: false }
+      cycleAnchor: null,     // "YYYY-MM-DD" when day 1 of 8-day cycle started
+      log: []                // { date, type, notes }
+    };
+
+    let currentMonth = new Date();
+    currentMonth.setDate(1);
+    let selectedDate = null;
+
+    // ========== STORAGE (safe for sandboxed environments) ==========
+    let storageAvailable = false;
+    const memoryStore = { data: null };
+
+    function checkStorage() {
+      try {
+        const testKey = "__wt_test__";
+        window.localStorage.setItem(testKey, "1");
+        window.localStorage.removeItem(testKey);
+        storageAvailable = true;
+      } catch (e) {
+        storageAvailable = false;
+        console.warn("localStorage недоступен (песочница). Данные будут храниться только в памяти до перезагрузки страницы.");
+      }
+      return storageAvailable;
+    }
+
+    function load() {
+      checkStorage();
+      try {
+        let parsed = null;
+        if (storageAvailable) {
+          const raw = localStorage.getItem("workoutTracker8");
+          if (raw) parsed = JSON.parse(raw);
+        } else if (memoryStore.data) {
+          parsed = memoryStore.data;
+        }
+        if (parsed) {
+          // Migrate old plan (days 4-8 rest) to new structure if needed
+          if (parsed.plan && !parsed.plan.upper) {
+            const newPlan = JSON.parse(JSON.stringify(DEFAULT_PLAN));
+            // keep custom exercises from old 1-3 if present
+            ["1","2","3"].forEach(k => {
+              if (parsed.plan[k]) newPlan[k] = parsed.plan[k];
+            });
+            state.plan = newPlan;
+          } else {
+            state.plan = parsed.plan || state.plan;
+          }
+          state.calendar = parsed.calendar || {};
+          state.cycleAnchor = parsed.cycleAnchor || null;
+          state.log = parsed.log || [];
+        }
+      } catch (e) {
+        console.warn("Ошибка загрузки данных:", e);
+      }
+      updateStorageBanner();
+    }
+
+    function save() {
+      try {
+        if (storageAvailable) {
+          localStorage.setItem("workoutTracker8", JSON.stringify(state));
+        } else {
+          memoryStore.data = JSON.parse(JSON.stringify(state));
+        }
+      } catch (e) {
+        console.warn("Ошибка сохранения:", e);
+        // fallback to memory
+        storageAvailable = false;
+        memoryStore.data = JSON.parse(JSON.stringify(state));
+        updateStorageBanner();
+      }
+    }
+
+    function updateStorageBanner() {
+      let banner = document.getElementById("storage-banner");
+      if (!banner) {
+        banner = document.createElement("div");
+        banner.id = "storage-banner";
+        banner.style.cssText = "display:none;background:#3d2a00;color:#f4d35e;padding:10px 14px;border-radius:10px;margin-bottom:14px;font-size:0.85rem;border:1px solid #5c4500;";
+        const app = document.querySelector(".app");
+        if (app && app.firstChild) {
+          app.insertBefore(banner, app.firstChild.nextSibling);
+        }
+      }
+      if (!storageAvailable) {
+        banner.style.display = "block";
+        banner.innerHTML = "⚠ Хранилище браузера недоступно (файл открыт в ограниченной среде). Данные сохраняются только до перезагрузки страницы. <strong>Скачайте файл и откройте его напрямую в браузере</strong> (двойной клик) — тогда всё будет сохраняться постоянно.";
+      } else {
+        banner.style.display = "none";
+      }
+    }
+
+    // ========== HELPERS ==========
+    function fmtDate(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function parseDate(str) {
+      const [y, m, d] = str.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function monthName(d) {
+      return d.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+    }
+
+    function dayName(d) {
+      return d.toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" });
+    }
+
+    function getCycleDay(dateStr) {
+      if (!state.cycleAnchor) return null;
+      const anchor = parseDate(state.cycleAnchor);
+      const date = parseDate(dateStr);
+      const diff = Math.floor((date - anchor) / 86400000);
+      let day = ((diff % 8) + 8) % 8 + 1;
+      return day;
+    }
+
+    function typeLabel(t) {
+      if (t === "1") return "День 1";
+      if (t === "2") return "День 2";
+      if (t === "3") return "День 3";
+      if (t === "upper") return "Верх";
+      if (t === "rest") return "Отдых";
+      if (t === "custom") return "Своё";
+      return t;
+    }
+
+    // ========== RENDER CALENDAR ==========
+    function renderCalendar() {
+      const title = document.getElementById("month-title");
+      title.textContent = monthName(currentMonth).replace(/^./, c => c.toUpperCase());
+
+      const container = document.getElementById("calendar-days");
+      container.innerHTML = "";
+
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth();
+
+      // Monday-based week
+      let first = new Date(year, month, 1);
+      let startDay = (first.getDay() + 6) % 7; // 0 = Mon
+
+      let start = new Date(year, month, 1 - startDay);
+      const todayStr = fmtDate(new Date());
+
+      for (let i = 0; i < 42; i++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i);
+        const str = fmtDate(d);
+        const isOther = d.getMonth() !== month;
+        const cell = document.createElement("div");
+        cell.className = "day" + (isOther ? " other-month" : "") + (str === todayStr ? " today" : "") + (str === selectedDate ? " selected" : "");
+        
+        const data = state.calendar[str];
+        if (data && data.notes) cell.classList.add("has-note");
+        if (data && data.done) cell.classList.add("done");
+
+        cell.innerHTML = `<span class="num">${d.getDate()}</span>`;
+
+        // Cycle day number (1–8) shown in calendar
+        if (state.cycleAnchor) {
+          const cday = getCycleDay(str);
+          if (cday) {
+            const cBadge = document.createElement("span");
+            cBadge.className = "badge cycle";
+            cBadge.textContent = "Ц" + cday;
+            cell.appendChild(cBadge);
+          }
+        }
+
+        // Type badge only from explicit assignment
+        const badgeType = data ? data.type : null;
+        if (badgeType) {
+          const badge = document.createElement("span");
+          let cls = "custom";
+          let txt = "С";
+          if (badgeType === "1") { cls = "d1"; txt = "Д1"; }
+          else if (badgeType === "2") { cls = "d2"; txt = "Д2"; }
+          else if (badgeType === "3") { cls = "d3"; txt = "Д3"; }
+          else if (badgeType === "upper") { cls = "upper"; txt = "В"; }
+          else if (badgeType === "rest") { cls = "rest"; txt = "О"; }
+          badge.className = "badge " + cls;
+          badge.textContent = txt;
+          cell.appendChild(badge);
+        }
+
+        cell.addEventListener("click", () => selectDay(str));
+        container.appendChild(cell);
+      }
+    }
+
+    function selectDay(dateStr) {
+      selectedDate = dateStr;
+      renderCalendar();
+      showDayDetail(dateStr);
+    }
+
+    function showDayDetail(dateStr) {
+      const detail = document.getElementById("day-detail");
+      detail.classList.add("visible");
+
+      const d = parseDate(dateStr);
+      document.getElementById("detail-title").textContent = dayName(d).replace(/^./, c => c.toUpperCase());
+
+      const data = state.calendar[dateStr] || { type: null, notes: "", done: false };
+      const currentType = data.type || null;
+
+      // Type buttons
+      document.querySelectorAll("#type-select .type-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.type === currentType);
+      });
+
+      // Exercises
+      const exBox = document.getElementById("detail-exercises");
+      exBox.innerHTML = "";
+      if (currentType && currentType !== "rest" && currentType !== "custom") {
+        const planDay = state.plan[currentType];
+        if (planDay && planDay.exercises.length) {
+          const ul = document.createElement("ul");
+          ul.className = "exercise-list";
+          planDay.exercises.forEach(ex => {
+            const li = document.createElement("li");
+            li.innerHTML = `<span class="name">${ex.name}</span><span class="sets">${ex.sets}</span>`;
+            ul.appendChild(li);
+          });
+          exBox.appendChild(ul);
+        }
+      } else if (currentType === "custom") {
+        exBox.innerHTML = `<p style="color:var(--muted);font-size:0.9rem;margin-bottom:10px;">Свой день — упражнения можно описать в заметках.</p>`;
+      } else if (currentType === "rest") {
+        exBox.innerHTML = `<p style="color:var(--muted);font-size:0.9rem;margin-bottom:10px;">День отдыха.</p>`;
+      }
+
+      // Cycle info + controls
+      let cycleInfo = document.getElementById("cycle-info-line");
+      if (!cycleInfo) {
+        cycleInfo = document.createElement("div");
+        cycleInfo.id = "cycle-info-line";
+        cycleInfo.style.cssText = "margin-bottom:12px;font-size:0.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center;";
+        const typeSelect = document.getElementById("type-select");
+        typeSelect.parentNode.insertBefore(cycleInfo, typeSelect);
+      }
+      if (state.cycleAnchor) {
+        const cday = getCycleDay(dateStr);
+        cycleInfo.innerHTML = `8-дневный цикл: <strong style="color:var(--text)">день ${cday}</strong>
+          <button class="btn secondary" id="set-cycle-here" style="padding:4px 10px;font-size:0.8rem;">Сделать этот день = Ц1</button>
+          <button class="btn secondary" id="clear-cycle-btn" style="padding:4px 10px;font-size:0.8rem;">Сбросить цикл</button>`;
+      } else {
+        cycleInfo.innerHTML = `8-дневный цикл не привязан
+          <button class="btn secondary" id="set-cycle-here" style="padding:4px 10px;font-size:0.8rem;">Начать цикл с этого дня (Ц1)</button>`;
+      }
+      const setBtn = document.getElementById("set-cycle-here");
+      if (setBtn) {
+        setBtn.onclick = () => {
+          state.cycleAnchor = dateStr;
+          save();
+          renderCalendar();
+          showDayDetail(dateStr);
+        };
+      }
+      const clearBtn = document.getElementById("clear-cycle-btn");
+      if (clearBtn) {
+        clearBtn.onclick = () => {
+          state.cycleAnchor = null;
+          save();
+          renderCalendar();
+          showDayDetail(dateStr);
+        };
+      }
+
+      document.getElementById("day-notes").value = data.notes || "";
+
+      // Update mark-done button text
+      const markBtn = document.getElementById("mark-done");
+      if (data.done) {
+        markBtn.textContent = "✓ Выполнено (снять)";
+        markBtn.style.background = "var(--success)";
+        markBtn.style.color = "#1a1a22";
+      } else {
+        markBtn.textContent = "Отметить выполненной";
+        markBtn.style.background = "";
+        markBtn.style.color = "";
+      }
+    }
+
+    // ========== PLAN EDITOR ==========
+    function renderPlan() {
+      const grid = document.getElementById("plan-grid");
+      grid.innerHTML = "";
+
+      const order = ["1", "2", "3", "upper", "rest"];
+      order.forEach((dayKey) => {
+        const p = state.plan[dayKey];
+        if (!p) return;
+        const card = document.createElement("div");
+        card.className = "plan-day";
+
+        let headerClass = "rest";
+        if (dayKey === "1") headerClass = "d1";
+        else if (dayKey === "2") headerClass = "d2";
+        else if (dayKey === "3") headerClass = "d3";
+        else if (dayKey === "upper") headerClass = "upper";
+
+        card.innerHTML = `
+          <div class="plan-day-header ${headerClass}">
+            <span>${p.title}</span>
+            <span style="font-weight:500;font-size:0.85rem;opacity:0.9">${p.approaches || ""}</span>
+          </div>
+          <div class="plan-day-body" data-day="${dayKey}"></div>
+        `;
+        const body = card.querySelector(".plan-day-body");
+
+        (p.exercises || []).forEach((ex, idx) => {
+          const item = document.createElement("div");
+          item.className = "ex-item";
+          item.innerHTML = `
+            <input type="text" value="${(ex.name || "").replace(/"/g, '&quot;')}" data-field="name" data-idx="${idx}" />
+            <input class="sets-input" type="text" value="${(ex.sets || "").replace(/"/g, '&quot;')}" data-field="sets" data-idx="${idx}" />
+            <div class="ex-actions">
+              <button data-action="up" data-idx="${idx}">↑</button>
+              <button data-action="down" data-idx="${idx}">↓</button>
+              <button data-action="del" data-idx="${idx}">Удалить</button>
+            </div>
+          `;
+          body.appendChild(item);
+        });
+
+        if (dayKey !== "rest") {
+          const addBtn = document.createElement("button");
+          addBtn.className = "add-ex";
+          addBtn.textContent = "+ Добавить упражнение";
+          addBtn.dataset.day = dayKey;
+          body.appendChild(addBtn);
+        }
+
+        // Title & approaches editable
+        const titleInput = document.createElement("input");
+        titleInput.type = "text";
+        titleInput.value = p.title || "";
+        titleInput.style.cssText = "width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:6px 10px;margin-bottom:8px;font-size:0.9rem;";
+        titleInput.dataset.field = "title";
+        body.insertBefore(titleInput, body.firstChild);
+
+        if (dayKey !== "rest") {
+          const appInput = document.createElement("input");
+          appInput.type = "text";
+          appInput.value = p.approaches || "";
+          appInput.placeholder = "Кол-во подходов (например: 9 подходов)";
+          appInput.style.cssText = "width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:6px 10px;margin-bottom:10px;font-size:0.85rem;";
+          appInput.dataset.field = "approaches";
+          body.insertBefore(appInput, body.children[1]);
+        }
+
+        grid.appendChild(card);
+      });
+
+      // Events
+      grid.querySelectorAll("input").forEach(inp => {
+        inp.addEventListener("change", (e) => {
+          const body = e.target.closest(".plan-day-body");
+          const day = body.dataset.day;
+          const field = e.target.dataset.field;
+          if (field === "title") {
+            state.plan[day].title = e.target.value;
+          } else if (field === "approaches") {
+            state.plan[day].approaches = e.target.value;
+          } else {
+            const idx = +e.target.dataset.idx;
+            state.plan[day].exercises[idx][field] = e.target.value;
+          }
+          save();
+          renderCalendar();
+        });
+      });
+
+      grid.querySelectorAll("[data-action]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const body = e.target.closest(".plan-day-body");
+          const day = body.dataset.day;
+          const idx = +e.target.dataset.idx;
+          const action = e.target.dataset.action;
+          const arr = state.plan[day].exercises;
+          if (action === "del") {
+            arr.splice(idx, 1);
+          } else if (action === "up" && idx > 0) {
+            [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+          } else if (action === "down" && idx < arr.length - 1) {
+            [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+          }
+          save();
+          renderPlan();
+        });
+      });
+
+      grid.querySelectorAll(".add-ex").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const day = btn.dataset.day;
+          if (!state.plan[day].exercises) state.plan[day].exercises = [];
+          state.plan[day].exercises.push({ name: "Новое упражнение", sets: "3 × 10" });
+          save();
+          renderPlan();
+        });
+      });
+    }
+
+    // ========== LOG ==========
+    function renderLog() {
+      const box = document.getElementById("log-content");
+      if (!state.log.length) {
+        box.innerHTML = `<div class="empty">Пока нет отмеченных тренировок.<br>Отметь день как выполненный в календаре.</div>`;
+        return;
+      }
+      const ul = document.createElement("ul");
+      ul.className = "log-list";
+      [...state.log].reverse().forEach((item, idx) => {
+        const li = document.createElement("div");
+        li.className = "log-item";
+        const d = parseDate(item.date);
+        li.innerHTML = `
+          <div>
+            <div class="date">${d.toLocaleDateString("ru-RU", { weekday: "short", day: "numeric", month: "short" })}</div>
+            <div class="type">${typeLabel(item.type)}${item.notes ? " · " + item.notes.slice(0, 40) : ""}</div>
+          </div>
+          <button class="btn secondary" style="padding:6px 10px;font-size:0.8rem;" data-idx="${state.log.length - 1 - idx}">Удалить</button>
+        `;
+        ul.appendChild(li);
+      });
+      box.innerHTML = "";
+      box.appendChild(ul);
+
+      box.querySelectorAll("button[data-idx]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.log.splice(+btn.dataset.idx, 1);
+          save();
+          renderLog();
+        });
+      });
+    }
+
+    // ========== EVENTS ==========
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+        if (tab.dataset.tab === "plan") renderPlan();
+        if (tab.dataset.tab === "log") renderLog();
+      });
+    });
+
+    document.getElementById("prev-month").addEventListener("click", () => {
+      currentMonth.setMonth(currentMonth.getMonth() - 1);
+      renderCalendar();
+    });
+    document.getElementById("next-month").addEventListener("click", () => {
+      currentMonth.setMonth(currentMonth.getMonth() + 1);
+      renderCalendar();
+    });
+
+    document.querySelectorAll("#type-select .type-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!selectedDate) return;
+        const type = btn.dataset.type;
+        if (!state.calendar[selectedDate]) state.calendar[selectedDate] = { type: null, notes: "", done: false };
+        state.calendar[selectedDate].type = type;
+        save();
+        showDayDetail(selectedDate);
+        renderCalendar();
+      });
+    });
+
+    document.getElementById("save-day").addEventListener("click", () => {
+      if (!selectedDate) return;
+      if (!state.calendar[selectedDate]) state.calendar[selectedDate] = { type: null, notes: "", done: false };
+      state.calendar[selectedDate].notes = document.getElementById("day-notes").value;
+      save();
+      renderCalendar();
+      // small feedback
+      const btn = document.getElementById("save-day");
+      const old = btn.textContent;
+      btn.textContent = "Сохранено ✓";
+      setTimeout(() => btn.textContent = old, 1200);
+    });
+
+    document.getElementById("mark-done").addEventListener("click", () => {
+      if (!selectedDate) return;
+      if (!state.calendar[selectedDate]) state.calendar[selectedDate] = { type: null, notes: "", done: false };
+      const data = state.calendar[selectedDate];
+      data.notes = document.getElementById("day-notes").value;
+      data.done = !data.done; // toggle
+      // add to log if becoming done and not already
+      if (data.done) {
+        const exists = state.log.find(l => l.date === selectedDate);
+        if (!exists) {
+          state.log.push({
+            date: selectedDate,
+            type: data.type || "custom",
+            notes: data.notes
+          });
+        }
+      } else {
+        // remove from log if un-marking
+        state.log = state.log.filter(l => l.date !== selectedDate);
+      }
+      save();
+      renderCalendar();
+      showDayDetail(selectedDate);
+    });
+
+    document.getElementById("clear-day").addEventListener("click", () => {
+      if (!selectedDate) return;
+      delete state.calendar[selectedDate];
+      save();
+      showDayDetail(selectedDate);
+      renderCalendar();
+    });
+
+    // Export / Import / Reset
+    document.getElementById("export-data").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `workout-tracker-${fmtDate(new Date())}.json`;
+      a.click();
+    });
+
+    document.getElementById("import-data").addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "application/json";
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const parsed = JSON.parse(reader.result);
+            if (parsed.plan && parsed.calendar) {
+              state = parsed;
+              save();
+              renderCalendar();
+              renderPlan();
+              renderLog();
+              alert("Данные успешно загружены");
+            } else {
+              alert("Неверный формат файла");
+            }
+          } catch (err) {
+            alert("Ошибка чтения файла");
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    });
+
+    document.getElementById("reset-all").addEventListener("click", () => {
+      showModal("Сбросить всё?", "Все данные (план, календарь, история) будут удалены. Это действие нельзя отменить.", () => {
+        try {
+          if (storageAvailable) localStorage.removeItem("workoutTracker8");
+        } catch (e) {}
+        memoryStore.data = null;
+        state = {
+          plan: JSON.parse(JSON.stringify(DEFAULT_PLAN)),
+          calendar: {},
+          cycleAnchor: null,
+          log: []
+        };
+        selectedDate = null;
+        document.getElementById("day-detail").classList.remove("visible");
+        renderCalendar();
+        renderPlan();
+        renderLog();
+      });
+    });
+
+    // Modal
+    let modalCallback = null;
+    function showModal(title, text, cb) {
+      document.getElementById("modal-title").textContent = title;
+      document.getElementById("modal-text").textContent = text;
+      document.getElementById("modal").classList.add("show");
+      modalCallback = cb;
+    }
+    document.getElementById("modal-confirm").addEventListener("click", () => {
+      document.getElementById("modal").classList.remove("show");
+      if (modalCallback) modalCallback();
+      modalCallback = null;
+    });
+    document.getElementById("modal-cancel").addEventListener("click", () => {
+      document.getElementById("modal").classList.remove("show");
+      modalCallback = null;
+    });
+
+    // ========== INIT ==========
+    load();
+    renderCalendar();
+    // Auto-select today
+    selectDay(fmtDate(new Date()));
+  </script>
+</body>
+</html>
