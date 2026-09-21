@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Тренировки"/>
+<meta name="theme-color" content="#FBF6F4" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#211C19" media="(prefers-color-scheme: dark)"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<title>Трекер тренировок</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600&display=swap');
+:root{
+  --bg:#FBF6F4;--bg2:#F7EFEA;--card:#FFFFFF;--c2:#F3E8E2;
+  --ac:#C4A484;--ac2:#B8957A;--ac-soft:rgba(196,164,132,.18);
+  --tx:#5C4A3D;--mu:#9A8578;--bd:#E8D9D0;--ok:#8FB89A;--wn:#D4B896;
+  --d1:#C9B0D8;--d2:#A8C9BE;--d3:#E0B8A0;--up:#A8BFD4;--rs:#C4B5AE;
+  --nh:68px;--sb:env(safe-area-inset-bottom,0px);--radius:20px;
+  --shadow:0 4px 24px rgba(92,74,61,.06);
+  --nav-pill:rgba(196,164,132,.16);
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Montserrat',-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,var(--font-body),sans-serif;color:var(--tx);min-height:100dvh;
+  padding-bottom:calc(var(--nh) + var(--sb));-webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(ellipse 100% 70% at 50% -15%,rgba(232,200,190,.4),transparent 55%),
+    radial-gradient(ellipse 50% 40% at 0% 100%,rgba(220,200,190,.25),transparent 50%),
+    linear-gradient(180deg,#FBF6F4 0%,#F7EFEA 40%,#F3EBE6 100%);
+}
+.app{max-width:560px;margin:0 auto;padding:16px 16px 28px;padding-top:max(16px,env(safe-area-inset-top))}
+.splash{
+  position:fixed;inset:0;z-index:200;overflow:hidden;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%,rgba(232,200,190,.55),transparent 55%),
+    radial-gradient(ellipse 70% 50% at 10% 80%,rgba(220,210,200,.4),transparent 50%),
+    linear-gradient(165deg,#FDF9F7 0%,#F7EFEA 45%,#F0E6E0 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 28px;text-align:center;transition:opacity .45s ease;
+}
+.splash::after{
+  content:"";position:absolute;width:280px;height:280px;border-radius:50%;
+  border:1px solid rgba(196,164,132,.2);top:50%;left:50%;
+  transform:translate(-50%,-58%);pointer-events:none;
+}
+.splash.hide{opacity:0;pointer-events:none}
+.splash .lotus{
+  width:170px;height:170px;margin-bottom:14px;position:relative;z-index:1;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23F0E4DC' stop-opacity='0.85'/%3E%3Cstop offset='100%25' stop-color='%23C4A484' stop-opacity='0.45'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0.5' y1='0' x2='0.5' y2='1'%3E%3Cstop offset='0%25' stop-color='%23E8D5C8' stop-opacity='0.7'/%3E%3Cstop offset='100%25' stop-color='%23D4B896' stop-opacity='0.4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23a)' stroke='%23C4A484' stroke-width='0.7' opacity='0.75'%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(0 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(15 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(30 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(45 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(60 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(75 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(90 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(105 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(120 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(135 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(150 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='20' ry='72' transform='rotate(165 100 100)'/%3E%3C/g%3E%3Cg fill='url(%23b)' stroke='%23C4A484' stroke-width='0.5' opacity='0.6'%3E%3Cellipse cx='100' cy='100' rx='14' ry='52' transform='rotate(7 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='14' ry='52' transform='rotate(37 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='14' ry='52' transform='rotate(67 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='14' ry='52' transform='rotate(97 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='14' ry='52' transform='rotate(127 100 100)'/%3E%3Cellipse cx='100' cy='100' rx='14' ry='52' transform='rotate(157 100 100)'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;
+  animation:softFloat 4s ease-in-out infinite;
+}
+@keyframes softFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.splash h1{
+  font-family:var(--font-display);font-size:2.35rem;font-weight:600;
+  color:#8B7355;letter-spacing:.02em;margin-bottom:12px;position:relative;z-index:1;line-height:1.2;
+}
+.splash p{color:var(--mu);font-size:1.08rem;line-height:1.6;max-width:300px;margin-bottom:32px;position:relative;z-index:1}
+.splash .btn{
+  width:auto;min-width:200px;padding:16px 36px;background:linear-gradient(135deg,#C4A484,#B8957A);
+  color:#fff;border:none;border-radius:999px;font-size:1.05rem;font-weight:500;
+  box-shadow:0 10px 32px rgba(196,164,132,.4);letter-spacing:.04em;position:relative;z-index:1;cursor:pointer;
+  font-family:var(--font-body);
+}
+.bnav{
+  position:fixed;left:0;right:0;bottom:0;z-index:100;
+  height:calc(var(--nh) + var(--sb));padding-bottom:var(--sb);
+  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(253,249,247,.95));
+  backdrop-filter:blur(16px);border-top:1px solid var(--bd);
+  display:flex;max-width:560px;margin:0 auto;box-shadow:0 -4px 20px rgba(92,74,61,.04);
+}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:0;border:0;color:var(--mu);font-size:.6rem;font-weight:500;padding:8px 2px;cursor:pointer;font-family:var(--font-body)}
+
+.ni.on{color:var(--ac2)}
+.panel{display:none}.panel.on{display:block;animation:rise .28s ease}
+@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.card{background:linear-gradient(165deg,#fff,#FDF9F7);border:1px solid var(--bd);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.btn{background:linear-gradient(135deg,#C4A484,#B8957A 55%,#A8886E);color:#fff;border:0;padding:14px 18px;border-radius:14px;font-weight:500;font-size:.92rem;cursor:pointer;width:100%;font-family:var(--font-body);letter-spacing:.02em;box-shadow:0 4px 16px rgba(196,164,132,.25)}
+.btn:active{transform:scale(.98)}
+.btn.sec{background:linear-gradient(135deg,#F7EFEA,#F0E6E0);color:var(--tx);border:1px solid var(--bd);box-shadow:none}
+.btn.ok{background:linear-gradient(135deg,#8FB89A,#7AA88A);color:#fff}
+.btn-row{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.mu{color:var(--mu);font-size:.88rem}
+.bp{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:600;color:#5C4A3D}
+.bp.d1{background:#EDE4F5}.bp.d2{background:#DCEEE8}.bp.d3{background:#F5E6DC}
+.bp.up{background:#DCE6F0}.bp.rs{background:#EBE4E0}.bp.cu{background:#F0E4DC}
+.th{text-align:center;margin-bottom:16px}
+.th .dt{font-size:.82rem;color:var(--mu);margin-bottom:4px;letter-spacing:.04em}
+.th h2{font-family:var(--font-display);font-size:1.75rem;font-weight:600;color:#8B7355}
+.streak{
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(196,164,132,.12),rgba(232,200,190,.22));
+  border:1px solid var(--bd);border-radius:18px;padding:14px 18px;margin-bottom:14px;
+  box-shadow:0 4px 16px rgba(92,74,61,.04);
+}
+.streak .n{font-family:var(--font-display);font-size:1.7rem;font-weight:700;color:var(--ac2)}
+.chip{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#F7EFEA,#F3E8E2);border-radius:16px;padding:12px 14px;font-size:.84rem;margin-bottom:14px;border:1px solid var(--bd);color:var(--tx);box-shadow:0 2px 12px rgba(92,74,61,.04)}
+.chip strong{color:var(--ac2);font-weight:600}
+.btn-cycle{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#C4A484,#B8957A);color:#fff;border:none;border-radius:999px;padding:10px 16px;font-size:.8rem;font-weight:500;cursor:pointer;font-family:var(--font-body);letter-spacing:.03em;box-shadow:0 4px 14px rgba(196,164,132,.35);white-space:nowrap}
+.btn-cycle.ghost{background:transparent;color:var(--ac2);border:1px solid rgba(196,164,132,.45);box-shadow:none}
+.ex{background:linear-gradient(145deg,#F7EFEA,#F3E8E2);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:10px}
+.ex .nm{font-weight:600;font-size:.92rem;margin-bottom:2px;line-height:1.35;color:var(--tx);word-break:break-word}
+.ex .st{color:var(--ac2);font-size:.8rem;font-weight:600;margin-bottom:10px;white-space:nowrap}
+.elog{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:#fff;border-radius:12px;padding:10px 12px;border:1px solid var(--bd)}
+.elog label{font-size:.7rem;color:var(--mu);width:100%;letter-spacing:.04em;text-transform:uppercase}
+.elog input{width:72px;background:var(--bg2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);padding:10px 8px;font-size:1rem;text-align:center;font-weight:600;font-family:var(--font-body)}
+.elog input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px var(--ac-soft)}
+.elog .x{color:var(--mu);font-size:.9rem}
+.elog .lb{background:var(--ac-soft);border:1px solid rgba(196,164,132,.4);color:var(--ac2);border-radius:10px;padding:10px 14px;font-size:.9rem;font-weight:600;cursor:pointer}
+.sl{margin-top:8px;font-size:.78rem;color:var(--mu)}
+.sl span{display:inline-block;background:var(--ac-soft);color:var(--ac2);padding:3px 10px;border-radius:8px;margin:2px;font-weight:500;white-space:nowrap}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ch h2{font-family:var(--font-display);font-size:1.35rem;text-transform:capitalize;font-weight:600;color:#8B7355}
+.nb{background:var(--card);border:1px solid var(--bd);color:var(--tx);width:44px;height:44px;border-radius:14px;font-size:1.2rem;cursor:pointer;box-shadow:var(--shadow)}
+.wd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:.68rem;color:var(--mu);margin-bottom:6px;font-weight:500}
+.ds{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.day{
+  background:linear-gradient(160deg,#fff,#FBF6F4);border:1px solid var(--bd);
+  border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  cursor:pointer;position:relative;font-size:.88rem;font-weight:500;min-height:64px;
+  box-shadow:0 1px 4px rgba(92,74,61,.03);padding:7px 2px 6px;
+}
+.day.om{opacity:.35}
+.day.td{box-shadow:0 0 0 2px var(--ac)}
+.day.sel{background:var(--c2);border-color:var(--ac)}
+.day.dn{background:rgba(143,184,154,.2);border-color:var(--ok)}
+.day.dn .num{color:var(--ok);font-weight:700}
+.day .num{line-height:1.15;z-index:1;font-size:.9rem}
+.day .check{
+  position:absolute;top:3px;right:5px;font-size:.75rem;line-height:1;
+  color:var(--ok);font-weight:700;z-index:2;
+}
+.day .dot{
+  position:absolute;top:6px;left:6px;width:5px;height:5px;
+  background:var(--wn);border-radius:50%;z-index:2;
+}
+.day .tags{
+  display:flex;flex-wrap:wrap;gap:2px;justify-content:center;align-items:center;
+  margin-top:4px;max-width:100%;z-index:1;
+}
+.day .bg{
+  position:static;font-size:.57rem;font-weight:700;padding:2px 3px;
+  border-radius:6px;color:#5C4A3D;line-height:1.2;text-align:center;
+  white-space:normal;overflow-wrap:break-word;max-width:100%;letter-spacing:-.01em;
+}
+.bg.d1{background:#EDE4F5}.bg.d2{background:#DCEEE8}.bg.d3{background:#F5E6DC}
+.bg.up{background:#DCE6F0}.bg.rs{background:#EBE4E0}.bg.cu{background:#F0E4DC}
+.bg.cy{background:rgba(196,164,132,.2);color:var(--mu)}
+.bg.sum{background:rgba(143,184,154,.3);color:#5a8a66}
+.ts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.tb{padding:12px 6px;border-radius:12px;border:1px solid var(--bd);background:var(--c2);color:var(--mu);font-size:.78rem;cursor:pointer;text-align:center;font-weight:500;font-family:var(--font-body)}
+.tb.on{color:#5C4A3D;font-weight:600}
+.tb.d1.on{background:#EDE4F5}.tb.d2.on{background:#DCEEE8}.tb.d3.on{background:#F5E6DC}
+.tb.up.on{background:#DCE6F0}.tb.rs.on{background:#EBE4E0}.tb.cu.on{background:#F0E4DC}
+textarea.nt{width:100%;min-height:80px;background:var(--bg2);border:1px solid var(--bd);border-radius:14px;color:var(--tx);padding:12px;font-size:.92rem;resize:vertical;margin-bottom:10px;font-family:var(--font-body)}
+textarea.nt:focus{outline:none;border-color:var(--ac)}
+.nb2{background:rgba(196,164,132,.1);border-left:3px solid var(--ac);padding:12px 14px;border-radius:0 14px 14px 0;margin-bottom:14px;font-size:.84rem;color:var(--mu)}
+.pd{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow)}
+.ph{padding:12px 14px;font-weight:600;display:flex;justify-content:space-between;font-size:.95rem;color:#5C4A3D}
+.ph.d1{background:linear-gradient(135deg,#EDE4F5,#E5D8F0)}.ph.d2{background:linear-gradient(135deg,#DCEEE8,#D0E5DE)}
+.ph.d3{background:linear-gradient(135deg,#F5E6DC,#EDD8CC)}.ph.up{background:linear-gradient(135deg,#DCE6F0,#D0DCEC)}.ph.rs{background:linear-gradient(135deg,#EBE4E0,#E2DAD4)}
+.pb{padding:12px}
+.ei{background:var(--bg2);border-radius:12px;padding:10px;margin-bottom:8px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}
+.ei input{width:100%;background:0;border:0;color:var(--tx);font-size:.9rem;font-family:var(--font-body)}
+.ei .si{width:auto;min-width:4.5em;max-width:8em;text-align:right;color:var(--ac2);font-weight:600;white-space:nowrap;flex-shrink:0}
+.ea{grid-column:1/-1;display:flex;gap:6px}
+.ea button{font-size:.75rem;padding:5px 10px;border-radius:8px;border:1px solid var(--bd);background:#fff;color:var(--mu);cursor:pointer}
+.ae,.tp{width:100%;margin-top:4px;padding:10px;border-radius:12px;border:1px dashed var(--bd);background:0;color:var(--mu);cursor:pointer;font-size:.84rem;font-family:var(--font-body)}
+.tr{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.tp{width:auto;flex:1;min-width:90px;border-style:solid;padding:8px;border-radius:10px;background:var(--c2)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.sg .sc:last-child{grid-column:1/-1}
+.sc{background:linear-gradient(160deg,#fff,#F9F2EE);border:1px solid var(--bd);border-radius:16px;padding:16px;text-align:center;box-shadow:var(--shadow)}
+.sc .v{font-family:var(--font-display);font-size:1.7rem;font-weight:700;color:var(--ac2)}
+.sc .l{font-size:.75rem;color:var(--mu);margin-top:2px}
+.bars{display:flex;align-items:flex-end;gap:6px;height:100px;padding:8px 0}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:8px 8px 0 0;background:linear-gradient(180deg,var(--ac),var(--ac2));min-height:4px;opacity:.85}
+.bl{font-size:.65rem;color:var(--mu)}
+.li{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.empty{text-align:center;color:var(--mu);padding:32px 16px}
+.toast{position:fixed;bottom:calc(var(--nh) + var(--sb) + 16px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--ac);color:#fff;font-weight:500;padding:12px 22px;border-radius:999px;font-size:.88rem;opacity:0;pointer-events:none;transition:all .25s;z-index:150;white-space:nowrap;box-shadow:0 8px 24px rgba(196,164,132,.35)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.mo{position:fixed;inset:0;background:rgba(92,74,61,.25);display:none;align-items:center;justify-content:center;z-index:160;padding:20px;backdrop-filter:blur(4px)}
+.mo.on{display:flex}
+.md{background:var(--card);border-radius:20px;padding:22px;max-width:340px;width:100%;border:1px solid var(--bd);box-shadow:0 12px 40px rgba(92,74,61,.12)}
+.fa{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--bd)}
+.fa button{background:0;border:0;color:var(--mu);font-size:.8rem;cursor:pointer;padding:6px 10px;font-family:var(--font-body)}
+@media(max-width:400px){.ei .si{font-size:.85rem;min-width:4em}.ex .st{font-size:.78rem}}
+
+
+
+.ni{transition:color .15s}
+.streak{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,rgba(196,164,132,.12),rgba(232,200,190,.22),rgba(201,176,216,.1));
+  border:1px solid var(--bd);border-radius:18px;padding:14px 16px;margin-bottom:14px;
+  box-shadow:0 4px 16px rgba(92,74,61,.04);
+}
+.streak-line{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap}
+.streak .n{font-family:var(--font-display);font-size:1.75rem;font-weight:700;color:var(--ac2);line-height:1}
+
+
+.btn-today{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#F7EFEA,#F0E6E0);border:1px solid var(--bd);
+  color:var(--ac2);border-radius:999px;padding:8px 14px;font-size:.78rem;font-weight:500;
+  cursor:pointer;font-family:var(--font-body);margin-top:8px;width:100%;
+}
+.wo-overlay{
+  position:fixed;inset:0;z-index:180;background:var(--bg);
+  display:none;flex-direction:column;padding:16px;padding-top:max(16px,env(safe-area-inset-top));
+  padding-bottom:max(16px,env(safe-area-inset-bottom));overflow-y:auto;
+}
+.wo-overlay.on{display:flex}
+.wo-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+.wo-top h2{font-family:var(--font-display);font-size:1.4rem;color:#8B7355;font-weight:600}
+.wo-timer{
+  text-align:center;padding:16px;border-radius:18px;margin-bottom:14px;
+  background:linear-gradient(135deg,rgba(196,164,132,.15),rgba(232,200,190,.2));
+  border:1px solid var(--bd);
+}
+.wo-timer .time{font-family:var(--font-display);font-size:2.5rem;font-weight:700;color:var(--ac2)}
+.wo-timer .lbl{font-size:.8rem;color:var(--mu);margin-top:4px}
+.plan-day-toggle{cursor:pointer;user-select:none}
+.plan-day-body.collapsed{display:none}
+.week-sum{
+  display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;
+}
+.week-sum .ws{
+  flex:1;min-width:90px;text-align:center;padding:12px;border-radius:14px;
+  background:linear-gradient(160deg,#fff,#F9F2EE);border:1px solid var(--bd);
+}
+.week-sum .ws .v{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--ac2)}
+.week-sum .ws .l{font-size:.7rem;color:var(--mu)}
+.undo-btn{
+  font-size:.75rem;color:var(--mu);background:none;border:none;cursor:pointer;
+  padding:4px 8px;margin-top:4px;font-family:var(--font-body);
+}
+.auto-fill{
+  width:100%;margin-top:10px;padding:12px;border-radius:14px;
+  border:1px dashed var(--ac);background:rgba(196,164,132,.08);
+  color:var(--ac2);font-size:.85rem;font-weight:500;cursor:pointer;font-family:var(--font-body);
+  transition:transform .1s ease,background .2s ease,border-color .2s ease,color .2s ease;
+}
+.auto-fill:active{transform:scale(.97)}
+.auto-fill.done{
+  border:1px solid var(--ok);background:rgba(143,184,154,.18);color:#5a8a66;font-weight:600;
+}
+.auto-fill.warn{
+  border:1px solid #C97B5F;background:rgba(201,123,95,.14);color:#A85D42;font-weight:600;
+}
+@keyframes pulseAttention{
+  0%{box-shadow:0 0 0 0 rgba(196,164,132,.55)}
+  70%{box-shadow:0 0 0 14px rgba(196,164,132,0)}
+  100%{box-shadow:0 0 0 0 rgba(196,164,132,0)}
+}
+.pulse-attn{animation:pulseAttention .8s ease-out 2}
+.empty-soft{text-align:center;color:var(--mu);padding:28px 16px;font-size:.92rem;line-height:1.5}
+
+
+.ap-row{
+  background:linear-gradient(145deg,#F7EFEA,#F3E8E2);border:1px solid var(--bd);
+  border-radius:14px;padding:12px;margin-bottom:8px;
+}
+.ap-row.done{opacity:.75;border-color:var(--ok)}
+.ap-row.active{border-color:var(--ac);box-shadow:0 0 0 2px rgba(196,164,132,.25)}
+.ap-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.ap-title{font-weight:600;font-size:.9rem;line-height:1.3}
+.ap-meta{font-size:.75rem;color:var(--ac2);font-weight:600;white-space:nowrap}
+.ap-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ap-actions .btn{width:auto;padding:10px 14px;font-size:.82rem}
+.ap-log{font-size:.78rem;color:var(--mu);margin-top:6px}
+.ex-block{margin-bottom:16px}
+.ex-block-title{font-family:var(--font-display);font-size:1.15rem;color:#8B7355;font-weight:600;margin-bottom:8px}
+
+
+.ap-row.dim{opacity:.45;pointer-events:none}
+.ap-row.dim.active,.ap-row.active{opacity:1;pointer-events:auto}
+.wo-progress{
+  text-align:center;font-size:.88rem;color:var(--mu);margin-bottom:12px;
+  padding:8px 12px;border-radius:12px;background:rgba(196,164,132,.1);
+}
+.wo-progress strong{color:var(--ac2);font-weight:600}
+.rest-presets{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.rest-presets button{
+  border:1px solid var(--bd);background:#fff;border-radius:999px;
+  padding:6px 12px;font-size:.78rem;color:var(--tx);cursor:pointer;font-family:var(--font-body);
+}
+.rest-presets button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+
+
+.wo-summary{text-align:center;padding:20px 12px}
+.wo-summary h3{font-family:var(--font-display);font-size:1.4rem;color:#8B7355;margin-bottom:10px}
+
+
+
+.hint-banner{
+  background:linear-gradient(160deg,#FFFFFF 0%,#FDF9F7 100%);
+  border:1px solid var(--bd);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 4px 16px rgba(92,74,61,.05);
+  text-align:left;
+}
+.hint-title{
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  font-weight:600;
+  color:#8B7355;
+  margin-bottom:10px;
+  letter-spacing:.01em;
+}
+.hint-list{
+  margin:0 0 14px 1.1em;
+  padding:0;
+  color:var(--tx);
+  font-size:.9rem;
+  line-height:1.6;
+}
+.hint-list li{margin-bottom:8px;padding-left:4px}
+.hint-list li::marker{color:var(--ac2);font-weight:600}
+.hint-btn{width:100%;padding:12px 16px !important;margin:0}
+
+
+.ni .i{
+  width:24px;height:24px;display:block;margin:0 auto 2px;border-radius:10px;
+  background-size:contain;background-repeat:no-repeat;background-position:center;
+  font-size:0;opacity:.7;transition:opacity .15s,transform .15s,background-color .15s,width .15s;
+}
+.ni.on .i{opacity:1;transform:scale(1.06);width:36px;background-color:var(--nav-pill)}
+.ni .i.ic-today{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3c-1.5 2.5-4 4.2-4 7a4 4 0 008 0c0-2.8-2.5-4.5-4-7z'/%3E%3Cpath d='M8.5 14.5c.8 1.2 1.8 2 3.5 2.5 1.7-.5 2.7-1.3 3.5-2.5'/%3E%3Cpath d='M9 17.5c.7.8 1.7 1.3 3 1.5 1.3-.2 2.3-.7 3-1.5'/%3E%3C/svg%3E");
+}
+.ni .i.ic-wo{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 8.5v7M4.5 10v4M17.5 8.5v7M19.5 10v4M8.5 12h7'/%3E%3Crect x='2.7' y='9.7' width='2.3' height='4.6' rx='1'/%3E%3Crect x='19' y='9.7' width='2.3' height='4.6' rx='1'/%3E%3C/svg%3E");
+}
+.ni .i.ic-cal{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15' rx='2.5'/%3E%3Cpath d='M3.5 10h17M8 3.5v3M16 3.5v3'/%3E%3Ccircle cx='8.5' cy='14' r='1' fill='%23B8957A' stroke='none'/%3E%3Ccircle cx='12' cy='14' r='1' fill='%23B8957A' stroke='none'/%3E%3Ccircle cx='15.5' cy='14' r='1' fill='%23B8957A' stroke='none'/%3E%3C/svg%3E");
+}
+.ni .i.ic-plan{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4h9.5a2 2 0 012 2v12.5a2 2 0 01-2 2H8a2 2 0 01-2-2V6a2 2 0 012-2z'/%3E%3Cpath d='M10 9h6M10 13h6M10 17h4'/%3E%3Cpath d='M6 7H5a2 2 0 00-2 2v9'/%3E%3C/svg%3E");
+}
+.ni .i.ic-stats{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 16l3.5-3.5 3 3L19 8'/%3E%3Cpath d='M15 8h4v4'/%3E%3C/svg%3E");
+}
+.ni.on .i.ic-today{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3c-1.5 2.5-4 4.2-4 7a4 4 0 008 0c0-2.8-2.5-4.5-4-7z'/%3E%3Cpath d='M8.5 14.5c.8 1.2 1.8 2 3.5 2.5 1.7-.5 2.7-1.3 3.5-2.5'/%3E%3Cpath d='M9 17.5c.7.8 1.7 1.3 3 1.5 1.3-.2 2.3-.7 3-1.5'/%3E%3C/svg%3E");
+}
+.ni.on .i.ic-wo{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 8.5v7M4.5 10v4M17.5 8.5v7M19.5 10v4M8.5 12h7'/%3E%3Crect x='2.7' y='9.7' width='2.3' height='4.6' rx='1'/%3E%3Crect x='19' y='9.7' width='2.3' height='4.6' rx='1'/%3E%3C/svg%3E");
+}
+.ni.on .i.ic-cal{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15' rx='2.5'/%3E%3Cpath d='M3.5 10h17M8 3.5v3M16 3.5v3'/%3E%3Ccircle cx='8.5' cy='14' r='1' fill='%238B7355' stroke='none'/%3E%3Ccircle cx='12' cy='14' r='1' fill='%238B7355' stroke='none'/%3E%3Ccircle cx='15.5' cy='14' r='1' fill='%238B7355' stroke='none'/%3E%3C/svg%3E");
+}
+.ni.on .i.ic-plan{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4h9.5a2 2 0 012 2v12.5a2 2 0 01-2 2H8a2 2 0 01-2-2V6a2 2 0 012-2z'/%3E%3Cpath d='M10 9h6M10 13h6M10 17h4'/%3E%3Cpath d='M6 7H5a2 2 0 00-2 2v9'/%3E%3C/svg%3E");
+}
+.ni.on .i.ic-stats{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 16l3.5-3.5 3 3L19 8'/%3E%3Cpath d='M15 8h4v4'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#211C19;--bg2:#2A2320;--card:#2F2723;--c2:#3A2F29;
+    --ac:#C9A67D;--ac2:#E0BD91;--ac-soft:rgba(201,166,125,.24);
+    --tx:#EFE6DD;--mu:#B5A493;--bd:#4A3D34;--ok:#8FB89A;--wn:#D4B896;
+    --shadow:0 4px 24px rgba(0,0,0,.35);
+    --nav-pill:rgba(201,166,125,.22);
+  }
+  body{
+    background:
+      radial-gradient(ellipse 100% 70% at 50% -15%,rgba(140,105,80,.22),transparent 55%),
+      radial-gradient(ellipse 50% 40% at 0% 100%,rgba(110,90,75,.18),transparent 50%),
+      linear-gradient(180deg,#211C19 0%,#241E1B 40%,#2A2320 100%);
+  }
+  .splash{
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%,rgba(140,105,80,.28),transparent 55%),
+      radial-gradient(ellipse 70% 50% at 10% 80%,rgba(110,95,80,.22),transparent 50%),
+      linear-gradient(165deg,#211C19 0%,#2A2320 45%,#2F2723 100%);
+  }
+  .splash h1,.th h2,.ch h2,#detail-title,.wo-top h2,.hint-title,.ex-block-title{color:#E7C9A0}
+  .card,.pd,.li,.sc,.nb,.week-sum .ws,.day{background:linear-gradient(165deg,var(--card),var(--bg2));border-color:var(--bd)}
+  .ex,.chip,.elog,.day{background:var(--bg2)}
+  .ei{background:var(--bg2)}
+  .btn.sec{background:linear-gradient(135deg,var(--bg2),var(--c2));color:var(--tx);border-color:var(--bd)}
+  .tb{background:var(--c2);color:var(--mu)}
+  textarea.nt,.elog input{background:var(--bg2);color:var(--tx);border-color:var(--bd)}
+  .mo{background:rgba(0,0,0,.5)}
+  .rest-presets button{background:var(--bg2);color:var(--tx);border-color:var(--bd)}
+  .bnav{background:linear-gradient(180deg,rgba(47,39,35,.92),rgba(42,35,32,.95))}
+  .hint-banner{background:linear-gradient(160deg,var(--card) 0%,var(--bg2) 100%)}
+  .ap-row{background:linear-gradient(145deg,var(--bg2),var(--c2))}
+  .wo-overlay{background:var(--bg)}
+  select{background:var(--c2);color:var(--tx)}
+}
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+  <div class="lotus" aria-hidden="true"></div>
+  <h1>Трекер тренировок</h1>
+  <p>Отмечай тренировки, веса и прогресс.<br>В своём ритме.</p>
+  <button class="btn" id="splash-go">Начать</button>
+</div>
+<div class="app">
+<div id="panel-today" class="panel on">
+  <div class="th"><div class="dt" id="today-date"></div><h2>Сегодня</h2></div>
+  <div class="streak" id="streak-box">
+  <div class="streak-line"><span class="n" id="streak-num">0</span><span class="mu" id="streak-label"> дней подряд</span></div>
+</div>
+  <div id="today-content"></div>
+</div>
+
+<div id="panel-workout" class="panel">
+  <div class="th"><h2>Тренировка</h2></div>
+  <div id="workout-panel-content"></div>
+</div>
+<div id="panel-calendar" class="panel">
+  <div class="ch"><button class="nb" id="prev-month" type="button">‹</button><h2 id="month-title"></h2><button class="nb" id="next-month" type="button">›</button></div>
+  <button type="button" class="btn-today" id="goto-today">К сегодня</button>
+  <div class="wd"><div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div></div>
+  <div class="ds" id="calendar-days"></div>
+  <div class="card" id="day-detail" style="display:none;margin-top:14px">
+    <h3 id="detail-title" style="margin-bottom:10px;font-family:var(--font-display);font-size:1.25rem;font-weight:600;color:#8B7355"></h3>
+    <div id="cycle-info-line" class="mu" style="margin-bottom:10px;font-size:.85rem"></div>
+    <div class="ts" id="type-select">
+      <button class="tb d1" data-type="1" type="button">Низ 1</button>
+      <button class="tb d2" data-type="2" type="button">Низ 2</button>
+      <button class="tb d3" data-type="3" type="button">Низ 3</button>
+      <button class="tb up" data-type="upper" type="button">Верх</button>
+      <button class="tb rs" data-type="rest" type="button">Отдых</button>
+      <button class="tb cu" data-type="custom" type="button">Своё</button>
+    </div>
+    <div id="detail-exercises"></div>
+    <label class="mu" style="display:block;margin-bottom:4px;font-size:.8rem">Заметки</label>
+    <textarea class="nt" id="day-notes" placeholder="Самочувствие, ощущения..."></textarea>
+    <div class="btn-row">
+      <button class="btn" id="save-day" type="button">Сохранить</button>
+      <button class="btn sec" id="mark-done" type="button">Отметить выполненной</button>
+      <button class="btn sec" id="copy-prev" type="button">Скопировать с прошлого раза</button>
+      <button class="btn sec" id="clear-day" type="button">Очистить день</button>
+    </div>
+  </div>
+</div>
+<div id="panel-plan" class="panel">
+  <div class="nb2">Раз в 1,5-2 месяца можно чуть снизить интенсивность - оставляй около 3 повторов в запасе. Береги себя.</div>
+  <div class="card" id="cycle-settings" style="margin-bottom:14px">
+    <div style="font-weight:600;margin-bottom:10px;color:#8B7355;font-family:var(--font-display);font-size:1.15rem">Длина цикла</div>
+    <p class="mu" style="font-size:.84rem;margin-bottom:12px">Сколько дней в тренировочном цикле (обычно 8).</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+      <button type="button" class="nb" id="cycle-minus" style="width:44px;height:44px;font-size:1.3rem">-</button>
+      <div id="cycle-len-display" style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--ac2);min-width:48px;text-align:center">8</div>
+      <button type="button" class="nb" id="cycle-plus" style="width:44px;height:44px;font-size:1.3rem">+</button>
+      <span class="mu" style="font-size:.85rem">дней</span>
+    </div>
+    <button type="button" class="auto-fill" id="auto-fill-cycle">Заполнить календарь по циклу на 2 недели вперёд</button>
+    <p class="mu" style="font-size:.78rem;margin-top:8px">Тренировочные дни распределяются равномерно по всей длине цикла, между ними — дни отдыха.</p>
+  </div>
+  <div id="plan-grid"></div>
+</div>
+<div id="panel-stats" class="panel">
+  <div class="week-sum" id="week-sum">
+    <div class="ws"><div class="v" id="ws-week">0</div><div class="l">на этой неделе</div></div>
+    <div class="ws"><div class="v" id="ws-prev">0</div><div class="l">на прошлой</div></div>
+  </div>
+  <div class="card" id="bw-card">
+    <div style="font-weight:600;margin-bottom:8px;color:#8B7355">Вес тела</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+      <input type="number" inputmode="decimal" id="bw-input" placeholder="кг" aria-label="Вес тела, кг" style="width:90px;background:var(--bg2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);padding:10px 8px;font-size:1rem;text-align:center;font-weight:600;font-family:var(--font-body)"/>
+      <button type="button" class="btn" id="bw-log" style="width:auto;padding:10px 16px">Записать сегодня</button>
+    </div>
+    <p class="mu" id="bw-summary" style="font-size:.85rem;margin-bottom:8px"></p>
+    <div class="bars" id="bw-bars"></div>
+  </div>
+  <div class="sg">
+    <div class="sc"><div class="v" id="stat-month">0</div><div class="l">тренировок в месяце</div></div>
+    <div class="sc"><div class="v" id="stat-streak">0</div><div class="l">серия (дней)</div></div>
+    <div class="sc"><div class="v" id="stat-total">0</div><div class="l">всего отмечено</div></div>
+  </div>
+  <div class="card">
+    <div style="font-weight:600;margin-bottom:8px;color:#8B7355">Нагрузка за 8 недель</div>
+    <div class="bars" id="load-bars"></div>
+    <p class="mu" style="font-size:.78rem;margin-top:8px">Столбик - выполненные тренировки</p>
+  </div>
+  <div class="card">
+    <div style="font-weight:600;margin-bottom:8px;color:#8B7355">Прогресс по упражнению</div>
+    <select id="progress-ex-select" aria-label="Выбор упражнения" style="width:100%;background:var(--c2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);padding:10px;margin-bottom:10px;font-size:.88rem;font-family:var(--font-body)"></select>
+    <div class="bars" id="progress-bars"></div>
+    <p class="mu" id="progress-caption" style="font-size:.78rem;margin-top:8px">Максимальный вес за тренировку в этом упражнении</p>
+  </div>
+  <div class="card" id="deload-hint" style="display:none;border-color:rgba(196,164,132,.4)">
+    <div style="font-weight:600;color:var(--ac2)">Можно чуть снизить интенсивность</div>
+    <p class="mu" style="margin-top:6px;font-size:.85rem">Прошло больше 6 недель. Оставляй около 3 повторов в запасе до отказа.</p>
+  </div>
+  <h3 style="margin:16px 0 10px;font-family:var(--font-display);font-size:1.2rem;color:#8B7355">История</h3>
+  <div id="log-content"></div>
+  <p class="mu" id="backup-hint" style="text-align:center;font-size:.78rem;margin-top:14px"></p>
+  <div class="fa">
+    <button type="button" id="share-progress">Поделиться</button>
+    <button type="button" id="export-data">Экспорт</button>
+    <button type="button" id="import-data">Импорт</button>
+    <button type="button" id="reset-all">Сброс</button>
+  </div>
+</div>
+</div>
+<nav class="bnav">
+  <button class="ni on" data-tab="today" type="button"><span class="i ic-today"></span>Сегодня</button>
+  <button class="ni" data-tab="workout" type="button"><span class="i ic-wo"></span>Тренировка</button>
+  <button class="ni" data-tab="calendar" type="button"><span class="i ic-cal"></span>Календарь</button>
+  <button class="ni" data-tab="plan" type="button"><span class="i ic-plan"></span>План</button>
+  <button class="ni" data-tab="stats" type="button"><span class="i ic-stats"></span>Статистика</button>
+</nav>
+
+<div class="wo-overlay" id="wo-overlay">
+  <div class="wo-top">
+    <h2 id="wo-title">Тренировка</h2>
+    <button type="button" class="btn sec" style="width:auto;padding:8px 14px" id="wo-close">Закрыть</button>
+  </div>
+  <div class="wo-timer" id="wo-timer-box" style="display:none">
+    <div class="time" id="wo-time">2:00</div>
+    <div class="lbl" id="wo-timer-lbl">Отдых</div>
+    <div class="rest-presets" id="rest-presets">
+      <button type="button" data-sec="60">1:00</button>
+      <button type="button" data-sec="90">1:30</button>
+      <button type="button" data-sec="120" class="on">2:00</button>
+      <button type="button" data-sec="180">3:00</button>
+    </div>
+    <div class="btn-row" style="margin-top:10px">
+      <button type="button" class="btn sec" id="wo-timer-skip">Пропустить</button>
+    </div>
+  </div>
+  <div class="wo-progress" id="wo-progress"></div>
+  <div id="wo-summary" class="wo-summary" style="display:none"></div>
+  <div id="wo-list"></div>
+  <div class="btn-row" style="margin-top:auto;padding-top:16px">
+    <button type="button" class="btn ok" id="wo-finish">Завершить тренировку</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="mo" id="modal">
+  <div class="md" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-text">
+    <h3 id="modal-title" style="font-family:var(--font-display);color:#8B7355">Подтверждение</h3>
+    <p id="modal-text" class="mu"></p>
+    <div class="btn-row">
+      <button class="btn" id="modal-confirm" type="button">Да</button>
+      <button class="btn sec" id="modal-cancel" type="button">Отмена</button>
+    </div>
+  </div>
+</div>
+<script>
+
+const DP={
+1:{title:"Низ 1",approaches:"9 подходов",exercises:[
+{name:"Зашагивания (около отказа 2 повтора)",sets:"3 x 10"},
+{name:"Жим ногами в растянутой позиции (около отказа 1 повтор)",sets:"2 x 12"},
+{name:"Отведения в кроссовере диагонально (в отказ)",sets:"2 x 10"},
+{name:"Гиперэкстензия на ягодицы (в отказ)",sets:"2 x 12"}
+]},
+2:{title:"Низ 2",approaches:"8 подходов",exercises:[
+{name:"Жим по одной ноге (около отказа 2 повтора)",sets:"3 x 8"},
+{name:"Ягодичный мост с дожимом (в отказ)",sets:"3 x 8"},
+{name:"Кикбэки с кубика (в отказ)",sets:"2 x 12"}
+]},
+3:{title:"Низ 3",approaches:"10 подходов",exercises:[
+{name:"Румынская тяга (около отказа 2 повтора)",sets:"3 x 10"},
+{name:"Мостик (короткая амплитуда - около отказа 1-2 повтора)",sets:"2 x 8"},
+{name:"Сгибания (в отказ)",sets:"2 x 10"},
+{name:"Отведения сидя (отклонившись назад - в отказ)",sets:"3 x 12"}
+]},
+upper:{title:"Верх",approaches:"",exercises:[
+{name:"Жим гантелей лежа",sets:"3 x 10"},
+{name:"Тяга верхнего блока",sets:"3 x 10"},
+{name:"Жим гантелей сидя (плечи)",sets:"3 x 10"},
+{name:"Подъем на бицепс",sets:"2 x 12"},
+{name:"Разгибания на трицепс",sets:"2 x 12"}
+]},
+rest:{title:"Отдых",approaches:"",exercises:[]}
+};
+const UT={
+"Грудь + руки":[{name:"Жим гантелей лежа",sets:"3 x 10"},{name:"Разводка гантелей",sets:"3 x 12"},{name:"Подъем на бицепс",sets:"3 x 10"},{name:"Французский жим",sets:"3 x 10"}],
+"Спина + плечи":[{name:"Тяга верхнего блока",sets:"3 x 10"},{name:"Тяга гантели в наклоне",sets:"3 x 10"},{name:"Жим гантелей сидя",sets:"3 x 10"},{name:"Махи в стороны",sets:"3 x 12"}],
+"Полный верх":[{name:"Жим гантелей лежа",sets:"3 x 10"},{name:"Тяга верхнего блока",sets:"3 x 10"},{name:"Жим гантелей сидя",sets:"3 x 10"},{name:"Подъем на бицепс",sets:"2 x 12"},{name:"Разгибания на трицепс",sets:"2 x 12"}]
+};
+let S={plan:JSON.parse(JSON.stringify(DP)),calendar:{},cycleAnchor:null,cycleLength:8,cycleEpochs:[],log:[],firstOpen:true,createdAt:null,lastWeights:{},restSec:120,hintDismissed:false,bodyWeight:[],lastExportAt:null};
+let CM=new Date();CM.setDate(1);let SD=null;let SA=false;const MS={data:null};
+function chk(){try{localStorage.setItem("__t","1");localStorage.removeItem("__t");SA=true}catch(e){SA=false}}
+function load(){
+chk();
+try{
+let p=null;
+if(SA){const r=localStorage.getItem("workoutTracker8");if(r)p=JSON.parse(r)}
+else if(MS.data)p=MS.data;
+if(p){
+if(p.plan&&!p.plan.upper){const n=JSON.parse(JSON.stringify(DP));["1","2","3"].forEach(function(k){if(p.plan[k])n[k]=p.plan[k]});S.plan=n}
+else S.plan=p.plan||S.plan;
+S.calendar=p.calendar||{};
+S.cycleAnchor=p.cycleAnchor||null;
+S.cycleLength=p.cycleLength||8;
+// cycleEpochs хранит историю "с какого дня действует какая длина цикла", чтобы
+// смена длины никогда не переписывала смысл уже прошедших дней задним числом.
+// Для файлов, сохранённых до появления этого поля, восстанавливаем один отрезок
+// из старых cycleAnchor/cycleLength.
+if(Array.isArray(p.cycleEpochs)&&p.cycleEpochs.length)S.cycleEpochs=p.cycleEpochs;
+else if(S.cycleAnchor)S.cycleEpochs=[{from:S.cycleAnchor,length:S.cycleLength}];
+else S.cycleEpochs=[];
+S.log=p.log||[];
+S.firstOpen=p.firstOpen===false?false:true;
+S.createdAt=p.createdAt||null;S.restSec=p.restSec||120;S.hintDismissed=!!p.hintDismissed;
+// lastWeights раньше хранил просто число (последний вес). Теперь хранит {w,r} - последние
+// вес И повторы, чтобы оба поля подставлялись плейсхолдером в следующий раз. Старые
+// записи-числа/строки оборачиваем в объект, чтобы не потерять уже накопленную историю.
+var rawLW=p.lastWeights||{};
+S.lastWeights={};
+Object.keys(rawLW).forEach(function(k){
+  var v=rawLW[k];
+  S.lastWeights[k]=(v&&typeof v==="object")?{w:v.w||"",r:v.r||""}:{w:v||"",r:""};
+});
+S.bodyWeight=Array.isArray(p.bodyWeight)?p.bodyWeight:[];
+S.lastExportAt=p.lastExportAt||null;
+}
+}catch(e){}
+if(!S.createdAt)S.createdAt=new Date().toISOString().slice(0,10);
+}
+function save(){
+try{if(SA)localStorage.setItem("workoutTracker8",JSON.stringify(S));else MS.data=JSON.parse(JSON.stringify(S))}
+catch(e){SA=false;MS.data=JSON.parse(JSON.stringify(S))}
+}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(function(){t.classList.remove("on")},1800)}
+function fd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function pd(s){const a=s.split("-").map(Number);return new Date(a[0],a[1]-1,a[2])}
+function mn(d){return d.toLocaleDateString("ru-RU",{month:"long",year:"numeric"})}
+function dn(d){return d.toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"})}
+function tl(t){
+  // Название типа дня можно переименовать в плане (вкладка "План") - подставляем его
+  // отовсюду, где раньше было жёстко "Низ 1"/"Низ 2" и т.п., чтобы переименование
+  // реально применялось везде, а не только в заголовке карточки плана.
+  if(t==="custom")return "Своё";
+  if(S.plan&&S.plan[t]&&S.plan[t].title)return S.plan[t].title;
+  const m={1:"Низ 1",2:"Низ 2",3:"Низ 3",upper:"Верх",rest:"Отдых",custom:"Своё"};
+  return m[t]||t||"-";
+}
+function tc(t){return t==="1"?"d1":t==="2"?"d2":t==="3"?"d3":t==="upper"?"up":t==="rest"?"rs":"cu"}
+function startNewCycleEpoch(dateStr){
+// Новая точка отсчёта цикла (Ц1) с указанного дня, с длиной, которая
+// действует прямо сейчас (S.cycleLength). Более ранние отрезки НЕ стираются -
+// они остаются в истории, чтобы уже прошедшие дни продолжали считаться по
+// той длине цикла, которая реально действовала на тот момент. Сами типы
+// дней и подходы в календаре при этом не трогаются.
+if(!S.cycleEpochs)S.cycleEpochs=[];
+// Отрезки, начинающиеся в тот же день или позже нового, заменяются им
+// (например, при повторном нажатии "Ц1" на ту же дату), а вся более ранняя
+// история сохраняется.
+S.cycleEpochs=S.cycleEpochs.filter(function(e){return e.from<dateStr});
+S.cycleEpochs.push({from:dateStr,length:S.cycleLength||8});
+S.cycleAnchor=dateStr;
+}
+function clearCycle(){
+S.cycleAnchor=null;
+S.cycleEpochs=[];
+}
+function segmentFor(ds){
+// возвращает {from,length} - отрезок цикла, действовавший на дату ds:
+// последний по дате начала отрезок, чей "from" не позже ds.
+var epochs=(S.cycleEpochs||[]).slice().sort(function(a,b){return a.from<b.from?-1:a.from>b.from?1:0});
+if(!epochs.length)return null;
+var seg=epochs[0];
+for(var i=0;i<epochs.length;i++){
+if(epochs[i].from<=ds)seg=epochs[i];else break;
+}
+return seg;
+}
+function gcd(ds){
+const seg=segmentFor(ds);
+if(!seg)return null;
+const L=Math.max(2,Math.min(21,seg.length||8));
+const a=pd(seg.from),d=pd(ds);
+return(((Math.floor((d-a)/86400000)%L)+L)%L)+1;
+}
+function streak(){
+let s=0;const d=new Date();d.setHours(12,0,0,0);
+for(let i=0;i<365;i++){
+const str=fd(d),data=S.calendar[str];
+if(data&&data.done){s++;d.setDate(d.getDate()-1)}
+else if(i===0){d.setDate(d.getDate()-1);continue}
+else break;
+}
+return s;
+}
+function pl(n){const a=n%10,b=n%100;if(a===1&&b!==11)return"день";if(a>=2&&a<=4&&(b<10||b>=20))return"дня";return"дней"}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
+
+// Тренировочные типы дней, которые нужно равномерно распределить по циклу,
+// оставляя между ними дни отдыха, вместо того чтобы ставить их подряд.
+var CYCLE_WORKOUT_TYPES=["1","2","3","upper"];
+function defaultCycleType(cycleDay,forLength){
+  var L=Math.max(2,Math.min(21,forLength||S.cycleLength||8));
+  // Число тренировочных дней в цикле ограничиваем половиной длины цикла (округляя вниз).
+  // Иначе при коротких циклах (5-7 дней) на все 4 типа тренировок просто не остаётся
+  // места для отдыха между ними, и они снова расставляются подряд, как "Низ 1" и "Низ 2".
+  // При L=8 и больше это ничего не меняет - там как и раньше используются все 4 типа.
+  var N=Math.max(1,Math.min(CYCLE_WORKOUT_TYPES.length,Math.floor(L/2)));
+  var idx=((cycleDay-1)%L+L)%L; // 0-индексный день внутри цикла
+  for(var i=0;i<N;i++){
+    var pos=Math.floor(i*L/N);
+    if(pos===idx)return CYCLE_WORKOUT_TYPES[i];
+  }
+  return "rest";
+}
+function autoFillCycle(daysAhead){
+  if(!S.cycleAnchor||!S.cycleEpochs||!S.cycleEpochs.length){toast("Сначала начни цикл");return null}
+  daysAhead=daysAhead||14;
+  // Заполнение всегда начинается с самого дня цикла (Ц1), а не с сегодняшнего дня -
+  // если Ц1 был назначен в прошлом или будущем, эти дни тоже должны попасть в заполнение.
+  // При этом диапазон всегда дотягивается минимум на daysAhead дней вперёд от сегодня,
+  // даже если старт цикла был давно.
+  var start=pd(S.cycleAnchor);
+  var today=new Date();today.setHours(12,0,0,0);
+  var endFrom=today.getTime()>start.getTime()?today:start;
+  var end=new Date(endFrom);end.setDate(end.getDate()+daysAhead-1);
+  var filled=0;
+  for(var d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+    var str=fd(d);
+    var cd=gcd(str);
+    if(!cd) continue;
+    var seg=segmentFor(str);
+    if(!S.calendar[str]) S.calendar[str]={type:null,notes:"",done:false,logs:{}};
+    if(!S.calendar[str].type){
+      S.calendar[str].type=defaultCycleType(cd,seg&&seg.length);
+      filled++;
+    }
+  }
+  save();rToday();rCal();
+  toast(filled?"Заполнено: "+filled+" дн.":"Уже заполнено");
+  return filled;
+}
+function lastWeightFor(type, idx){
+  var key=type+"_"+idx;
+  var v=S.lastWeights&&S.lastWeights[key];
+  return (v&&v.w)||"";
+}
+function lastRepsFor(type, idx){
+  var key=type+"_"+idx;
+  var v=S.lastWeights&&S.lastWeights[key];
+  return (v&&v.r)||"";
+}
+function rememberSet(type, idx, w, r){
+  if(!w&&!r) return;
+  if(!S.lastWeights) S.lastWeights={};
+  var key=type+"_"+idx;
+  var prev=S.lastWeights[key]||{w:"",r:""};
+  S.lastWeights[key]={w:w||prev.w,r:r||prev.r};
+}
+var woTimer=null, woEndAt=0, woTimerFired=true;
+function vibratePulse(){
+  try{if(navigator.vibrate)navigator.vibrate([200,100,200])}catch(e){}
+}
+// Единый AudioContext создаётся/разблокируется по прямому тапу пользователя
+// (см. ensureAudio() в обработчиках кнопок) - на iOS Safari звук, запущенный
+// изнутри setInterval без предшествующего жеста, часто просто не проигрывается.
+var audioCtx=null;
+function ensureAudio(){
+  try{
+    if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended")audioCtx.resume();
+  }catch(e){}
+}
+function playRestEnd(){
+  try{
+    ensureAudio();
+    if(audioCtx){
+      var o=audioCtx.createOscillator();var g=audioCtx.createGain();
+      o.connect(g);g.connect(audioCtx.destination);
+      o.frequency.value=880;g.gain.value=0.08;
+      o.start();
+      setTimeout(function(){try{o.stop()}catch(e){}},300);
+    }
+  }catch(e){}
+  vibratePulse();
+}
+var wakeLock=null;
+async function requestWake(){
+  try{
+    if(navigator.wakeLock)wakeLock=await navigator.wakeLock.request("screen");
+  }catch(e){}
+}
+function releaseWake(){
+  try{if(wakeLock){wakeLock.release();wakeLock=null}}catch(e){}
+}
+function startRestTimer(sec){
+  sec=sec||S.restSec||120;
+  // Храним момент окончания отдыха, а не убывающий счётчик секунд: так таймер
+  // не сбивается, если экран телефона погас или вкладка была свёрнута -
+  // setInterval может пропускать тики в фоне, а Date.now() - нет.
+  woEndAt=Date.now()+sec*1000;
+  woTimerFired=false;
+  var box=document.getElementById("wo-timer-box");
+  if(box) box.style.display="block";
+  function tick(){
+    var remaining=Math.max(0,Math.round((woEndAt-Date.now())/1000));
+    var m=Math.floor(remaining/60), s=remaining%60;
+    var el=document.getElementById("wo-time");
+    if(el) el.textContent=m+":"+String(s).padStart(2,"0");
+    if(remaining<=0&&!woTimerFired){
+      woTimerFired=true;
+      clearInterval(woTimer);woTimer=null;
+      if(box) box.style.display="none";
+      playRestEnd();
+      toast("Отдых закончен");
+    }
+  }
+  if(woTimer) clearInterval(woTimer);
+  tick();
+  woTimer=setInterval(tick,250);
+}
+document.addEventListener("visibilitychange",function(){
+  if(!document.hidden&&woTimer){
+    var el=document.getElementById("wo-time");
+    var remaining=Math.max(0,Math.round((woEndAt-Date.now())/1000));
+    if(el)el.textContent=Math.floor(remaining/60)+":"+String(remaining%60).padStart(2,"0");
+  }
+});
+
+function parseSetsCount(setsStr){
+  if(!setsStr)return 3;
+  var m=String(setsStr).match(/(\d+)\s*[xхXХ×]/);
+  if(m)return Math.max(1,Math.min(10,parseInt(m[1],10)));
+  return 3;
+}
+function countWorkoutProgress(type, logs){
+  var plan=S.plan[type];if(!plan)return {done:0,total:0};
+  var total=0,done=0;
+  plan.exercises.forEach(function(ex,idx){
+    var n=parseSetsCount(ex.sets);total+=n;
+    var arr=(logs&&(logs[String(idx)]||logs[idx]))||[];
+    for(var i=0;i<n;i++){if(arr[i]&&(arr[i].w||arr[i].r||arr[i].done||arr[i].skipped))done++}
+  });
+  return {done:done,total:total};
+}
+function openWorkout(){
+  var ts=fd(new Date());
+  var data=S.calendar[ts]||{type:null,notes:"",done:false,logs:{}};
+  if(!data.type||data.type==="rest"||data.type==="custom"){
+    toast("Сначала назначь тренировочный день");
+    return;
+  }
+  var plan=S.plan[data.type];
+  if(!plan||!plan.exercises.length){toast("Нет упражнений");return}
+  document.getElementById("wo-title").textContent=plan.title||"Тренировка";
+  var list=document.getElementById("wo-list");
+  var sumEl=document.getElementById("wo-summary");
+  if(sumEl){sumEl.style.display="none";sumEl.innerHTML=""}
+  if(list)list.style.display="block";
+  if(!S.calendar[ts])S.calendar[ts]={type:data.type,notes:"",done:false,logs:{}};
+  if(!S.calendar[ts].type)S.calendar[ts].type=data.type;
+  if(!S.calendar[ts].logs)S.calendar[ts].logs={};
+  requestWake();
+  var prog=countWorkoutProgress(data.type, S.calendar[ts].logs);
+  var progEl=document.getElementById("wo-progress");
+  if(progEl)progEl.innerHTML='Прогресс: <strong>'+prog.done+'</strong> из <strong>'+prog.total+'</strong> подходов';
+
+  var h="";
+  var activeFound=false;
+  plan.exercises.forEach(function(ex,idx){
+    var nSets=parseSetsCount(ex.sets);
+    var logs=S.calendar[ts].logs[String(idx)]||S.calendar[ts].logs[idx]||[];
+    var lw=lastWeightFor(data.type, idx);
+    var lr=lastRepsFor(data.type, idx);
+    h+='<div class="ex-block">';
+    h+='<div class="ex-block-title">'+(idx+1)+'. '+esc(ex.name)+'</div>';
+    h+='<div class="mu" style="font-size:.8rem;margin-bottom:8px;white-space:nowrap">План: '+esc(ex.sets)+(lw?' · прошлый вес: '+esc(lw)+' кг':'')+'</div>';
+    for(var s=0;s<nSets;s++){
+      var done=logs[s];
+      var hasDone=done&&(done.w||done.r||done.done||done.skipped);
+      var isNext=!hasDone&&!activeFound;
+      if(isNext)activeFound=true;
+      var dimClass=(!hasDone&&!isNext)?" dim":"";
+      h+='<div class="ap-row'+(hasDone?" done":"")+(isNext?" active":"")+dimClass+'" id="ap-'+idx+'-'+s+'" data-ex="'+idx+'" data-set="'+s+'">';
+      h+='<div class="ap-head"><div class="ap-title">Подход '+(s+1)+' из '+nSets+'</div><div class="ap-meta">'+(lw?lw+' кг':'цель')+'</div></div>';
+      if(hasDone){
+        if(done.skipped)h+='<div class="ap-log">Пропущено</div>';
+        else h+='<div class="ap-log">Записано: '+(done.w||"-")+' кг x '+(done.r||"-")+'</div>';
+        h+='<div class="ap-actions"><button type="button" class="btn sec ap-redo" data-ex="'+idx+'" data-set="'+s+'">Переделать</button></div>';
+      }else{
+        h+='<div class="elog ap-inputs" style="display:none;margin-bottom:8px"><label>Вес и повторы</label>';
+        h+='<input type="number" inputmode="decimal" placeholder="кг" class="wi" aria-label="Вес, кг" value="'+esc(lw)+'"/><span class="x">x</span>';
+        h+='<input type="number" inputmode="numeric" placeholder="раз" class="ri" aria-label="Повторения" value="'+esc(lr)+'"/></div>';
+        h+='<div class="ap-actions">';
+        h+='<button type="button" class="btn ap-start" data-ex="'+idx+'" data-set="'+s+'">Начать выполнение</button>';
+        h+='<button type="button" class="btn ok ap-finish" data-ex="'+idx+'" data-set="'+s+'" style="display:none">Завершить подход</button>';
+        h+='<button type="button" class="btn sec ap-skip" data-ex="'+idx+'" data-set="'+s+'">Пропустить</button>';
+        h+='</div>';
+      }
+      h+='</div>';
+    }
+    h+='</div>';
+  });
+  list.innerHTML=h;
+  document.getElementById("wo-overlay").classList.add("on");
+
+  // rest presets highlight
+  document.querySelectorAll("#rest-presets button").forEach(function(btn){
+    btn.classList.toggle("on", +btn.dataset.sec===(S.restSec||120));
+    btn.onclick=function(){
+      ensureAudio();
+      S.restSec=+btn.dataset.sec;save();
+      document.querySelectorAll("#rest-presets button").forEach(function(b){b.classList.remove("on")});
+      btn.classList.add("on");
+      if(woTimer)startRestTimer(S.restSec);
+      toast("Отдых "+Math.floor(S.restSec/60)+":"+String(S.restSec%60).padStart(2,"0"));
+    };
+  });
+
+  list.querySelectorAll(".ap-start").forEach(function(b){
+    b.onclick=function(){
+      var row=document.getElementById("ap-"+b.dataset.ex+"-"+b.dataset.set);
+      if(!row)return;
+      document.querySelectorAll(".ap-row").forEach(function(r){
+        r.classList.remove("active");
+        if(!r.classList.contains("done"))r.classList.add("dim");
+      });
+      row.classList.add("active");row.classList.remove("dim");
+      var inp=row.querySelector(".ap-inputs");
+      if(inp)inp.style.display="flex";
+      b.style.display="none";
+      var fin=row.querySelector(".ap-finish");
+      if(fin)fin.style.display="inline-flex";
+      toast("Подход начат");
+    };
+  });
+
+  list.querySelectorAll(".ap-finish").forEach(function(b){
+    b.onclick=function(){
+      ensureAudio();
+      var ex=b.dataset.ex, set=+b.dataset.set;
+      var row=document.getElementById("ap-"+ex+"-"+set);
+      if(!row)return;
+      var wi=row.querySelector(".wi"), ri=row.querySelector(".ri");
+      var w=wi?wi.value:"", r=ri?ri.value:"";
+      var key=String(ex);
+      if(!S.calendar[ts].logs[key])S.calendar[ts].logs[key]=[];
+      var arr=S.calendar[ts].logs[key];
+      while(arr.length<=set)arr.push(null);
+      arr[set]={w:w,r:r,done:true};
+      S.calendar[ts].logs[key]=arr;
+      rememberSet(data.type, ex, w, r);
+      save();
+      startRestTimer(S.restSec||120);
+      toast("Подход завершён");
+      openWorkout();
+    };
+  });
+
+  list.querySelectorAll(".ap-skip").forEach(function(b){
+    b.onclick=function(){
+      var ex=String(b.dataset.ex), set=+b.dataset.set;
+      if(!S.calendar[ts].logs[ex])S.calendar[ts].logs[ex]=[];
+      var arr=S.calendar[ts].logs[ex];
+      while(arr.length<=set)arr.push(null);
+      arr[set]={skipped:true,done:true};
+      S.calendar[ts].logs[ex]=arr;
+      save();
+      toast("Подход пропущен");
+      openWorkout();
+    };
+  });
+
+  list.querySelectorAll(".ap-redo").forEach(function(b){
+    b.onclick=function(){
+      var ex=String(b.dataset.ex), set=+b.dataset.set;
+      if(S.calendar[ts].logs[ex]){S.calendar[ts].logs[ex][set]=null;save()}
+      openWorkout();
+    };
+  });
+}
+
+function closeWorkout(){
+  document.getElementById("wo-overlay").classList.remove("on");
+  if(woTimer){clearInterval(woTimer);woTimer=null}
+  var box=document.getElementById("wo-timer-box");if(box)box.style.display="none";
+  var sum=document.getElementById("wo-summary");if(sum){sum.style.display="none";sum.innerHTML=""}
+  var list=document.getElementById("wo-list");if(list)list.style.display="block";
+  releaseWake();
+  rToday();
+  if(typeof rWorkoutTab==="function")rWorkoutTab();
+}
+function weekCount(offsetWeeks){
+  offsetWeeks=offsetWeeks||0;
+  var now=new Date();now.setHours(12,0,0,0);
+  var day=(now.getDay()+6)%7;
+  var monday=new Date(now);monday.setDate(now.getDate()-day-offsetWeeks*7);
+  var cnt=0;
+  for(var i=0;i<7;i++){
+    var d=new Date(monday);d.setDate(monday.getDate()+i);
+    var str=fd(d);
+    if(S.calendar[str]&&S.calendar[str].done)cnt++;
+  }
+  return cnt;
+}
+
+
+
+function rWorkoutTab(){
+  var box=document.getElementById("workout-panel-content");
+  if(!box)return;
+  var ts=fd(new Date());
+  var data=S.calendar[ts]||{type:null,notes:"",done:false,logs:{}};
+  var type=data.type;
+  var h="";
+  h+='<div class="card">';
+  if(type&&type!=="rest"&&type!=="custom"){
+    var plan=S.plan[type];
+    // Название типа тренировки не дублируем значком отдельно - оно уже в заголовке
+    // карточки ниже ("Название - N подходов"). Показываем только отметку "Выполнено".
+    if(data.done)h+='<div style="margin-bottom:10px"><span style="color:var(--ok);font-weight:600">Выполнено</span></div>';
+    if(plan){
+      h+='<div style="font-weight:600;margin-bottom:8px;color:#8B7355">'+esc(plan.title||"")+(plan.approaches?" · "+esc(plan.approaches):"")+'</div>';
+      h+='<p class="mu" style="margin-bottom:14px;font-size:.88rem">'+plan.exercises.length+' упражнений в плане</p>';
+    }
+    h+='<div class="btn-row">';
+    h+='<button type="button" class="btn" id="tab-start-wo">Начать тренировку</button>';
+    if(!data.done)h+='<button type="button" class="btn sec" id="tab-mark-done">Отметить выполненной без режима</button>';
+    h+='</div>';
+  }else if(type==="rest"){
+    h+='<div class="empty-soft">Сегодня день отдыха.<br>Восстанавливайся — тренировка завтра.</div>';
+  }else if(type==="custom"){
+    h+='<div class="empty-soft">Сегодня свой день.<br>Опиши его в заметках на вкладке «Сегодня».</div>';
+  }else{
+    h+='<div class="empty-soft">Тип дня ещё не назначен.<br>Выбери Низ 1–3 или Верх на вкладке «Сегодня» или в календаре.</div>';
+    h+='<div class="btn-row"><button type="button" class="btn sec" id="tab-go-today">Перейти к сегодня</button></div>';
+  }
+  h+='</div>';
+  if(type&&type!=="rest"&&type!=="custom"&&S.plan[type]){
+    h+='<div class="card"><div style="font-weight:600;margin-bottom:10px;color:#8B7355">Упражнения</div>';
+    S.plan[type].exercises.forEach(function(ex,idx){
+      var logs=(data.logs&&data.logs[idx])?data.logs[idx]:[];
+      h+='<div style="padding:10px 0;border-bottom:1px solid var(--bd)">';
+      h+='<div style="font-weight:500">'+esc(ex.name)+'</div>';
+      h+='<div class="mu" style="font-size:.8rem;white-space:nowrap">'+esc(ex.sets)+'</div>';
+      if(logs.length)h+='<div class="sl" style="margin-top:6px">'+logs.filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }
+  box.innerHTML=h;
+  var b=document.getElementById("tab-start-wo");
+  if(b)b.onclick=function(){openWorkout()};
+  var m=document.getElementById("tab-mark-done");
+  if(m)m.onclick=function(){
+    if(!S.calendar[ts])S.calendar[ts]={type:type,notes:"",done:false,logs:{}};
+    S.calendar[ts].done=true;
+    if(!S.log.find(function(l){return l.date===ts}))S.log.push({date:ts,type:type||"custom",notes:S.calendar[ts].notes||""});
+    save();rWorkoutTab();toast("Отмечено");
+  };
+  var g=document.getElementById("tab-go-today");
+  if(g)g.onclick=function(){sw("today")};
+}
+
+
+
+function showOnboardingHint(){
+  if(S.hintDismissed)return "";
+  return '<div class="hint-banner" id="hint-banner">'+
+    '<div class="hint-title">Как начать</div>'+
+    '<ol class="hint-list">'+
+    '<li>Нажми «Начать сегодня» — так запустится цикл</li>'+
+    '<li>Выбери тип дня: Низ 1–3 или Верх</li>'+
+    '<li>Открой вкладку «Тренировка»</li>'+
+    '</ol>'+
+    '<button type="button" class="btn sec hint-btn" id="hint-ok">Понятно</button>'+
+    '</div>';
+}
+
+function rToday(){
+const today=new Date(),ts=fd(today);
+document.getElementById("today-date").textContent=dn(today).replace(/^./,function(c){return c.toUpperCase()});
+const st=streak();
+document.getElementById("streak-num").textContent=st;
+document.getElementById("streak-label").textContent=" "+pl(st)+" подряд";
+const box=document.getElementById("today-content");
+const data=S.calendar[ts]||{type:null,notes:"",done:false,logs:{}};
+let type=data.type,h=showOnboardingHint();
+if(!S.cycleAnchor){
+h+='<div class="chip"><span>Цикл ещё не начат</span><button type="button" class="btn-cycle" id="startc">Начать сегодня - Ц1</button></div>';
+}
+if(type){
+// Название типа тренировки не дублируем отдельным значком - оно и так есть в
+// заголовке карточки ниже ("Низ 3 - 10 подходов"). Показываем только отметку
+// о выполнении, если тренировка уже сделана.
+if(data.done)h+='<div style="margin-bottom:10px"><span style="color:var(--ok);font-weight:600">Выполнено</span></div>';
+}else{
+h+='<p class="mu" style="margin-bottom:12px">Тип дня не назначен</p><div class="ts" id="tts" style="margin-bottom:14px"><button class="tb d1" data-type="1" type="button">'+esc(tl("1"))+'</button><button class="tb d2" data-type="2" type="button">'+esc(tl("2"))+'</button><button class="tb d3" data-type="3" type="button">'+esc(tl("3"))+'</button><button class="tb up" data-type="upper" type="button">'+esc(tl("upper"))+'</button><button class="tb rs" data-type="rest" type="button">'+esc(tl("rest"))+'</button><button class="tb cu" data-type="custom" type="button">Своё</button></div>';
+}
+if(type&&type!=="rest"&&type!=="custom"){
+const plan=S.plan[type];
+if(plan&&plan.exercises.length){
+h+='<div class="card" style="padding:12px"><div style="font-weight:600;margin-bottom:8px">'+esc(plan.title)+(plan.approaches?" - "+esc(plan.approaches):"")+'</div>';
+plan.exercises.forEach(function(ex,idx){
+const logs=(data.logs&&data.logs[idx])?data.logs[idx]:[];
+var lw=lastWeightFor(type,idx);
+var lr=lastRepsFor(type,idx);
+h+='<div class="ex"><div class="nm">'+esc(ex.name)+'</div><div class="st">'+esc(ex.sets)+'</div><div class="elog"><label>Записать подход</label><input type="number" inputmode="decimal" placeholder="кг" class="wi" aria-label="Вес, кг" data-i="'+idx+'" value="'+esc(lw)+'"/><span class="x">x</span><input type="number" inputmode="numeric" placeholder="раз" class="ri" aria-label="Повторения" data-i="'+idx+'" value="'+esc(lr)+'"/><button type="button" class="lb" data-i="'+idx+'">+</button></div><div class="sl" id="lg'+idx+'">'+logs.filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div><button type="button" class="undo-btn lg-undo" data-i="'+idx+'">Удалить последний подход</button></div>';
+});
+h+='</div>';
+}
+}else if(type==="rest"){
+h+='<div class="card"><p class="mu">День отдыха</p></div>';
+}else if(type==="custom"){
+h+='<div class="card"><p class="mu">Свой день - в заметках</p></div>';
+}
+if(data.notes)h+='<div class="card"><div class="mu" style="font-size:.8rem;margin-bottom:4px">Заметки</div>'+esc(data.notes)+'</div>';
+h+='<div class="btn-row">';
+if(type&&type!=="rest"&&type!=="custom")h+='<button class="btn" id="start-wo" type="button">Начать тренировку</button>';
+h+='<button class="btn '+(data.done?"ok":"")+'" id="tdone" type="button">'+(data.done?"Выполнено (снять)":"Отметить выполненной")+'</button><button class="btn sec" id="gocal" type="button">Открыть в календаре</button></div>';
+box.innerHTML=h;
+const sc=document.getElementById("startc");
+if(sc)sc.onclick=function(){startNewCycleEpoch(ts);save();rToday();toast("Цикл начат")};
+const rb=document.getElementById("rebind");
+if(rb)rb.onclick=function(){startNewCycleEpoch(ts);save();rToday();toast("Старт обновлён")};
+document.querySelectorAll("#tts .tb").forEach(function(b){
+b.onclick=function(){
+if(!S.calendar[ts])S.calendar[ts]={type:null,notes:"",done:false,logs:{}};
+S.calendar[ts].type=b.dataset.type;save();rToday();
+};
+});
+document.querySelectorAll(".lb").forEach(function(b){
+b.onclick=function(){
+const i=b.dataset.i,card=b.closest(".ex");
+const w=card.querySelector(".wi").value,r=card.querySelector(".ri").value;
+if(!w&&!r)return;
+if(!S.calendar[ts])S.calendar[ts]={type:null,notes:"",done:false,logs:{}};
+if(!S.calendar[ts].logs)S.calendar[ts].logs={};
+if(!S.calendar[ts].logs[i])S.calendar[ts].logs[i]=[];
+S.calendar[ts].logs[i].push({w:w,r:r});
+rememberSet(type, i, w, r);
+save();
+card.querySelector(".ri").value="";
+document.getElementById("lg"+i).innerHTML=S.calendar[ts].logs[i].filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
+toast("Записано");
+};
+});
+document.getElementById("tdone").onclick=function(){
+if(!S.calendar[ts])S.calendar[ts]={type:null,notes:"",done:false,logs:{}};
+const d=S.calendar[ts];d.done=!d.done;
+if(d.done){if(!S.log.find(function(l){return l.date===ts}))S.log.push({date:ts,type:d.type||"custom",notes:d.notes||""})}
+else S.log=S.log.filter(function(l){return l.date!==ts});
+save();rToday();toast(d.done?"Отмечено":"Снято");
+};
+document.getElementById("gocal").onclick=function(){sw("calendar");SD=ts;rCal();showDet(ts)};
+var hintOk=document.getElementById("hint-ok");
+if(hintOk)hintOk.onclick=function(){S.hintDismissed=true;save();rToday()};
+var swo=document.getElementById("start-wo");
+if(swo)swo.onclick=function(){openWorkout()};
+document.querySelectorAll(".lg-undo").forEach(function(b){
+b.onclick=function(){
+var i=b.dataset.i;
+if(!S.calendar[ts]||!S.calendar[ts].logs||!S.calendar[ts].logs[i]||!S.calendar[ts].logs[i].length){toast("Нечего удалять");return}
+S.calendar[ts].logs[i].pop();save();
+document.getElementById("lg"+i).innerHTML=(S.calendar[ts].logs[i]||[]).filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
+toast("Удалено");
+};
+});
+}
+
+function rCal(){
+document.getElementById("month-title").textContent=mn(CM).replace(/^./,function(c){return c.toUpperCase()});
+const c=document.getElementById("calendar-days");c.innerHTML="";
+const y=CM.getFullYear(),m=CM.getMonth(),f=new Date(y,m,1),sd=(f.getDay()+6)%7,st=new Date(y,m,1-sd),ts=fd(new Date());
+for(let i=0;i<42;i++){
+const d=new Date(st);d.setDate(st.getDate()+i);const str=fd(d),om=d.getMonth()!==m;
+const cell=document.createElement("div");
+cell.className="day"+(om?" om":"")+(str===ts?" td":"")+(str===SD?" sel":"");
+const data=S.calendar[str];
+if(data&&data.notes)cell.classList.add("hn");
+if(data&&data.done)cell.classList.add("dn");
+var html="";
+if(data&&data.notes)html+='<span class="dot"></span>';
+if(data&&data.done)html+='<span class="check">✓</span>';
+html+='<span class="num">'+d.getDate()+'</span>';
+var tags="";
+if(data&&data.type){
+var cl=tc(data.type);
+var label=tl(data.type);
+if(data.done&&data.type!=="rest"&&data.type!=="custom"){
+var pr=countWorkoutProgress(data.type, data.logs||{});
+if(pr.total>0)label+=" · "+pr.done+"/"+pr.total;
+}
+tags+='<span class="bg '+cl+'">'+esc(label)+'</span>';
+}
+if(tags)html+='<div class="tags">'+tags+'</div>';
+cell.innerHTML=html;
+cell.onclick=(function(str){return function(){SD=str;rCal();showDet(str)}})(str);
+c.appendChild(cell);
+}
+}
+
+function showDet(ds){
+document.getElementById("day-detail").style.display="block";
+document.getElementById("detail-title").textContent=dn(pd(ds)).replace(/^./,function(c){return c.toUpperCase()});
+const data=S.calendar[ds]||{type:null,notes:"",done:false,logs:{}};
+const ct=data.type||null;
+document.querySelectorAll("#type-select .tb").forEach(function(b){b.classList.toggle("on",b.dataset.type===ct);if(b.dataset.type!=="custom")b.textContent=tl(b.dataset.type)});
+const cl=document.getElementById("cycle-info-line");
+if(S.cycleAnchor){
+const cd=gcd(ds);
+cl.innerHTML='<span>День цикла <strong>Ц'+cd+'</strong></span> <button type="button" class="btn-cycle ghost" id="sc1">Сделать Ц1</button> <button type="button" class="btn-cycle ghost" id="cc">Сбросить</button>';
+document.getElementById("sc1").onclick=function(){startNewCycleEpoch(ds);save();rCal();showDet(ds);toast("Ц1")};
+document.getElementById("cc").onclick=function(){clearCycle();save();rCal();showDet(ds)};
+}else{
+cl.innerHTML='<span>Цикл ещё не начат</span> <button type="button" class="btn-cycle" id="sc1">Начать - Ц1</button>';
+document.getElementById("sc1").onclick=function(){startNewCycleEpoch(ds);save();rCal();showDet(ds);toast("Цикл начат")};
+}
+const eb=document.getElementById("detail-exercises");eb.innerHTML="";
+if(ct&&ct!=="rest"&&ct!=="custom"){
+const p=S.plan[ct];
+if(p&&p.exercises.length){
+let h="";
+p.exercises.forEach(function(ex,idx){
+const logs=(data.logs&&data.logs[idx])?data.logs[idx]:[];
+const lw=lastWeightFor(ct,idx),lr=lastRepsFor(ct,idx);
+h+='<div class="ex"><div class="nm">'+esc(ex.name)+'</div><div class="st">'+esc(ex.sets)+'</div><div class="elog"><label>Записать подход</label><input type="number" inputmode="decimal" placeholder="кг" class="wi" aria-label="Вес, кг" data-i="'+idx+'" value="'+esc(lw)+'"/><span class="x">x</span><input type="number" inputmode="numeric" placeholder="раз" class="ri" aria-label="Повторения" data-i="'+idx+'" value="'+esc(lr)+'"/><button type="button" class="lb cal-log" data-i="'+idx+'">+</button></div><div class="sl" id="clg'+idx+'">'+logs.filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div></div>';
+});
+eb.innerHTML=h;
+document.querySelectorAll(".cal-log").forEach(function(b){
+b.onclick=function(){
+const i=b.dataset.i;const card=b.closest(".ex");
+const w=card.querySelector(".wi").value,r=card.querySelector(".ri").value;
+if(!w&&!r)return;
+if(!S.calendar[ds])S.calendar[ds]={type:ct,notes:"",done:false,logs:{}};
+if(!S.calendar[ds].logs)S.calendar[ds].logs={};
+if(!S.calendar[ds].logs[i])S.calendar[ds].logs[i]=[];
+S.calendar[ds].logs[i].push({w:w,r:r});rememberSet(ct,i,w,r);save();
+card.querySelector(".wi").value="";card.querySelector(".ri").value="";
+document.getElementById("clg"+i).innerHTML=S.calendar[ds].logs[i].filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
+toast("Записано");
+};
+});
+}
+}else if(ct==="rest"){
+eb.innerHTML='<p class="mu" style="margin-bottom:10px">День отдыха</p>';
+}else if(ct==="custom"){
+eb.innerHTML='<p class="mu" style="margin-bottom:10px">Свой день</p>';
+}
+document.getElementById("day-notes").value=data.notes||"";
+const mb=document.getElementById("mark-done");
+if(data.done){mb.textContent="Выполнено (снять)";mb.classList.add("ok")}
+else{mb.textContent="Отметить выполненной";mb.classList.remove("ok")}
+}
+
+function rPlan(){
+const g=document.getElementById("plan-grid");g.innerHTML="";
+["1","2","3","upper","rest"].forEach(function(dk){
+const p=S.plan[dk];if(!p)return;
+const card=document.createElement("div");card.className="pd";
+const hc=tc(dk);
+card.innerHTML='<div class="ph '+hc+'"><span>'+esc(p.title)+'</span><span style="font-weight:500;font-size:.85rem;opacity:.9">'+esc(p.approaches||"")+'</span></div><div class="pb" data-d="'+dk+'"></div>';
+const body=card.querySelector(".pb");
+if(dk==="upper"){
+const row=document.createElement("div");row.className="tr";
+Object.keys(UT).forEach(function(n){
+const b=document.createElement("button");b.className="tp";b.type="button";b.textContent=n;
+b.onclick=function(){S.plan.upper.exercises=JSON.parse(JSON.stringify(UT[n]));save();rPlan();toast("Шаблон")};
+row.appendChild(b);
+});
+body.appendChild(row);
+}
+const ti=document.createElement("input");ti.type="text";ti.value=p.title||"";
+ti.style.cssText="width:100%;background:var(--c2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);padding:8px;margin-bottom:8px;font-size:.9rem";
+ti.dataset.f="title";body.appendChild(ti);
+if(dk!=="rest"){
+const ai=document.createElement("input");ai.type="text";ai.value=p.approaches||"";ai.placeholder="Подходы";
+ai.style.cssText="width:100%;background:var(--c2);border:1px solid var(--bd);border-radius:8px;color:var(--mu);padding:8px;margin-bottom:10px;font-size:.85rem";
+ai.dataset.f="approaches";body.appendChild(ai);
+}
+(p.exercises||[]).forEach(function(ex,idx){
+const item=document.createElement("div");item.className="ei";
+item.innerHTML='<input type="text" value="'+esc(ex.name||"")+'" data-f="name" data-i="'+idx+'"/><input class="si" type="text" value="'+esc(ex.sets||"")+'" data-f="sets" data-i="'+idx+'"/><div class="ea"><button type="button" data-a="up" data-i="'+idx+'">↑</button><button type="button" data-a="dn" data-i="'+idx+'">↓</button><button type="button" data-a="del" data-i="'+idx+'">Удалить</button></div>';
+body.appendChild(item);
+});
+if(dk!=="rest"){
+const ab=document.createElement("button");ab.className="ae";ab.type="button";ab.textContent="+ Добавить";ab.dataset.d=dk;body.appendChild(ab);
+}
+g.appendChild(card);
+});
+g.querySelectorAll("input").forEach(function(inp){
+inp.onchange=function(e){
+const body=e.target.closest(".pb"),d=body.dataset.d,f=e.target.dataset.f;
+if(f==="title")S.plan[d].title=e.target.value;
+else if(f==="approaches")S.plan[d].approaches=e.target.value;
+else S.plan[d].exercises[+e.target.dataset.i][f]=e.target.value;
+save();
+};
+});
+g.querySelectorAll("[data-a]").forEach(function(btn){
+btn.onclick=function(e){
+const body=e.target.closest(".pb"),d=body.dataset.d,idx=+e.target.dataset.i,arr=S.plan[d].exercises,a=e.target.dataset.a;
+if(a==="del")arr.splice(idx,1);
+else if(a==="up"&&idx>0){const t=arr[idx-1];arr[idx-1]=arr[idx];arr[idx]=t}
+else if(a==="dn"&&idx<arr.length-1){const t=arr[idx+1];arr[idx+1]=arr[idx];arr[idx]=t}
+save();rPlan();
+};
+});
+g.querySelectorAll(".ae").forEach(function(btn){
+btn.onclick=function(){
+const d=btn.dataset.d;
+if(!S.plan[d].exercises)S.plan[d].exercises=[];
+S.plan[d].exercises.push({name:"Новое упражнение",sets:"3 x 10"});
+save();rPlan();
+};
+});
+}
+
+// Вес тела - отдельная от рабочих весов история, своя запись раз в день.
+function bwTodayStr(){return fd(new Date())}
+function logBodyWeight(kg){
+  if(!kg||kg<=0) return;
+  if(!S.bodyWeight) S.bodyWeight=[];
+  var ts=bwTodayStr();
+  var existing=S.bodyWeight.find(function(e){return e.date===ts});
+  if(existing) existing.kg=kg;
+  else S.bodyWeight.push({date:ts,kg:kg});
+  S.bodyWeight.sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0});
+  save();
+}
+function rBodyWeight(){
+  var sum=document.getElementById("bw-summary");
+  var bars=document.getElementById("bw-bars");
+  if(!sum||!bars) return;
+  var list=(S.bodyWeight||[]).slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0});
+  if(!list.length){
+    sum.textContent="Пока нет ни одной записи";
+    bars.innerHTML="";
+    return;
+  }
+  var first=list[0],last=list[list.length-1];
+  var diff=Math.round((last.kg-first.kg)*10)/10;
+  var diffTxt=diff===0?"без изменений с начала":(diff>0?"+"+diff:String(diff))+" кг с начала";
+  sum.textContent="Сейчас: "+last.kg+" кг \u00b7 "+diffTxt;
+  var recent=list.slice(-8);
+  var vals=recent.map(function(e){return e.kg});
+  var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+  var range=(mx-mn)||1;
+  bars.innerHTML=recent.map(function(e){
+    var h=Math.round(18+(e.kg-mn)/range*62);
+    var dt=pd(e.date);
+    var lbl=dt.toLocaleDateString("ru-RU",{day:"numeric",month:"numeric"});
+    return '<div class="bc"><div class="bar" style="height:'+h+'px"></div><div class="bl">'+e.kg+'</div><div class="bl" style="opacity:.65">'+lbl+'</div></div>';
+  }).join("");
+}
+// Мягкое напоминание сделать бэкап (Экспорт), чтобы не потерять данные - показываем
+// как спокойную строку рядом с самой кнопкой экспорта, а не отдельным баннером.
+function renderBackupHint(){
+  var bh=document.getElementById("backup-hint");
+  if(!bh) return;
+  if(!S.lastExportAt){
+    bh.textContent="Бэкап данных ещё ни разу не делали - на всякий случай стоит сохранить";
+    return;
+  }
+  var days=Math.floor((Date.now()-pd(S.lastExportAt).getTime())/86400000);
+  var txt=days<=0?"Последний бэкап: сегодня":"Последний бэкап: "+days+" "+pl(days)+" назад";
+  if(days>=30)txt+=" - можно обновить";
+  bh.textContent=txt;
+}
+function rStats(){
+rBodyWeight();
+renderBackupHint();
+const now=new Date(),y=now.getFullYear(),m=now.getMonth();
+let mc=0,tot=0;
+Object.keys(S.calendar).forEach(function(k){
+const d=S.calendar[k];
+if(d&&d.done){tot++;const dt=pd(k);if(dt.getFullYear()===y&&dt.getMonth()===m)mc++}
+});
+document.getElementById("ws-week").textContent=weekCount(0);
+document.getElementById("ws-prev").textContent=weekCount(1);
+document.getElementById("stat-month").textContent=mc;
+document.getElementById("stat-streak").textContent=streak();
+document.getElementById("stat-total").textContent=tot;
+const bars=document.getElementById("load-bars");bars.innerHTML="";
+const wc=[];
+for(let w=7;w>=0;w--){
+let cnt=0;
+for(let d=0;d<7;d++){
+const dt=new Date();dt.setDate(dt.getDate()-(w*7+d));
+if(S.calendar[fd(dt)]&&S.calendar[fd(dt)].done)cnt++;
+}
+wc.push(cnt);
+}
+const mx=Math.max(1,Math.max.apply(null,wc));
+wc.forEach(function(c){
+const col=document.createElement("div");col.className="bc";
+col.innerHTML='<div class="bar" style="height:'+Math.round(c/mx*80)+'px"></div><div class="bl">'+c+'</div>';
+bars.appendChild(col);
+});
+const created=S.createdAt?pd(S.createdAt):new Date();
+document.getElementById("deload-hint").style.display=Math.floor((Date.now()-created.getTime())/(7*86400000))>=6?"block":"none";
+rProgressChart();
+const lb=document.getElementById("log-content");
+if(!S.log.length)lb.innerHTML='<div class="empty">Нет отмеченных тренировок</div>';
+else{
+const items=S.log.slice().reverse().slice(0,30);
+lb.innerHTML=items.map(function(item,i){
+const dt=pd(item.date);
+return '<div class="li"><div><div style="font-weight:600">'+dt.toLocaleDateString("ru-RU",{weekday:"short",day:"numeric",month:"short"})+'</div><div class="mu" style="font-size:.85rem">'+tl(item.type)+(item.notes?" - "+esc(item.notes.slice(0,40)):"")+'</div></div><button type="button" class="btn sec" style="width:auto;padding:6px 10px;font-size:.8rem" data-i="'+i+'">x</button></div>';
+}).join("");
+lb.querySelectorAll("[data-i]").forEach(function(btn){
+btn.onclick=function(){
+const i=+btn.dataset.i;const ri=S.log.length-1-i;const date=items[i].date;
+const dl=pd(date).toLocaleDateString("ru-RU",{day:"numeric",month:"long"});
+showM("Удалить запись?","Тренировка от "+dl+" будет удалена из истории.",function(){
+S.log.splice(ri,1);
+if(S.calendar[date])S.calendar[date].done=false;
+save();rStats();rToday();rCal();
+});
+};
+});
+}
+}
+
+function collectExerciseOptions(){
+var opts=[];
+["1","2","3","upper"].forEach(function(type){
+var plan=S.plan[type];
+if(!plan||!plan.exercises)return;
+plan.exercises.forEach(function(ex,idx){
+opts.push({type:type,idx:idx,label:tl(type)+" \u2014 "+(ex.name||"")});
+});
+});
+return opts;
+}
+function exerciseHistory(type,idx,limit){
+var out=[];
+Object.keys(S.calendar).sort().forEach(function(date){
+var day=S.calendar[date];
+if(!day||day.type!==type||!day.logs)return;
+var arr=day.logs[String(idx)]||day.logs[idx];
+if(!arr||!arr.length)return;
+var maxW=0;
+arr.forEach(function(s){
+if(s&&s.w){var w=parseFloat(String(s.w).replace(",","."));if(!isNaN(w)&&w>maxW)maxW=w}
+});
+if(maxW>0)out.push({date:date,w:maxW});
+});
+if(limit)out=out.slice(-limit);
+return out;
+}
+function rProgressChart(){
+var sel=document.getElementById("progress-ex-select");
+var box=document.getElementById("progress-bars");
+var cap=document.getElementById("progress-caption");
+if(!sel||!box)return;
+var opts=collectExerciseOptions();
+if(!opts.length){
+sel.innerHTML="";
+box.innerHTML='<p class="mu" style="text-align:center;padding:12px 0">Пока нет упражнений в плане</p>';
+if(cap)cap.style.display="none";
+return;
+}
+if(cap)cap.style.display="block";
+var prevVal=sel.value;
+sel.innerHTML=opts.map(function(o){return '<option value="'+o.type+'|'+o.idx+'">'+esc(o.label)+'</option>'}).join("");
+var keys=opts.map(function(o){return o.type+"|"+o.idx});
+var val=(prevVal&&keys.indexOf(prevVal)!==-1)?prevVal:keys[0];
+sel.value=val;
+var parts=val.split("|"),type=parts[0],idx=+parts[1];
+var hist=exerciseHistory(type,idx,10);
+if(!hist.length){
+box.innerHTML='<p class="mu" style="text-align:center;padding:12px 0">Пока нет записей веса по этому упражнению</p>';
+return;
+}
+var mx=Math.max.apply(null,hist.map(function(h){return h.w}));
+box.innerHTML=hist.map(function(h){
+var dt=pd(h.date);
+var lbl=dt.toLocaleDateString("ru-RU",{day:"numeric",month:"numeric"});
+var barH=Math.max(4,Math.round(h.w/mx*70));
+return '<div class="bc"><div class="bar" style="height:'+barH+'px"></div><div class="bl">'+h.w+'</div><div class="bl" style="opacity:.65">'+lbl+'</div></div>';
+}).join("");
+}
+function sw(n){
+document.querySelectorAll(".ni").forEach(function(x){x.classList.toggle("on",x.dataset.tab===n)});
+document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on")});
+var panel=document.getElementById("panel-"+n);
+if(panel)panel.classList.add("on");
+if(n==="today")rToday();
+if(n==="workout")rWorkoutTab();
+if(n==="calendar")rCal();
+if(n==="plan"){rPlan();updateCycleDisplay()}
+if(n==="stats")rStats();
+}
+document.querySelectorAll(".ni").forEach(function(n){n.onclick=function(){sw(n.dataset.tab)}});
+document.getElementById("prev-month").onclick=function(){CM.setMonth(CM.getMonth()-1);rCal()};
+document.getElementById("next-month").onclick=function(){CM.setMonth(CM.getMonth()+1);rCal()};
+document.querySelectorAll("#type-select .tb").forEach(function(btn){
+btn.onclick=function(){
+if(!SD)return;
+if(!S.calendar[SD])S.calendar[SD]={type:null,notes:"",done:false,logs:{}};
+S.calendar[SD].type=btn.dataset.type;save();showDet(SD);rCal();
+};
+});
+document.getElementById("save-day").onclick=function(){
+if(!SD)return;
+if(!S.calendar[SD])S.calendar[SD]={type:null,notes:"",done:false,logs:{}};
+S.calendar[SD].notes=document.getElementById("day-notes").value;save();rCal();toast("Сохранено");
+};
+document.getElementById("mark-done").onclick=function(){
+if(!SD)return;
+if(!S.calendar[SD])S.calendar[SD]={type:null,notes:"",done:false,logs:{}};
+const data=S.calendar[SD];
+data.notes=document.getElementById("day-notes").value;data.done=!data.done;
+if(data.done){if(!S.log.find(function(l){return l.date===SD}))S.log.push({date:SD,type:data.type||"custom",notes:data.notes})}
+else S.log=S.log.filter(function(l){return l.date!==SD});
+save();rCal();showDet(SD);toast(data.done?"Отмечено":"Снято");
+};
+document.getElementById("copy-prev").onclick=function(){
+if(!SD)return;
+const data=S.calendar[SD];
+if(!data||!data.type||data.type==="rest"||data.type==="custom"){toast("Сначала назначь тип");return}
+const keys=Object.keys(S.calendar).filter(function(k){return k<SD&&S.calendar[k].type===data.type}).sort().reverse();
+if(!keys.length){toast("Нет записей");return}
+const prev=S.calendar[keys[0]];
+if(prev.notes)S.calendar[SD].notes=prev.notes;
+if(prev.logs)S.calendar[SD].logs=JSON.parse(JSON.stringify(prev.logs));
+save();showDet(SD);toast("Скопировано");
+};
+document.getElementById("clear-day").onclick=function(){
+if(!SD)return;
+showM("Очистить день?","Тип дня, все записанные подходы и заметки будут удалены без возможности восстановить.",function(){
+delete S.calendar[SD];
+S.log=S.log.filter(function(l){return l.date!==SD});
+save();showDet(SD);rCal();toast("Очищено");
+});
+};
+document.getElementById("share-progress").onclick=function(){
+var lines=["Мой прогресс в тренировках"];
+lines.push("Серия: "+streak()+" "+pl(streak()));
+var shNow=new Date(),shY=shNow.getFullYear(),shM=shNow.getMonth();
+var shMc=0,shTot=0;
+Object.keys(S.calendar).forEach(function(k){
+  var d=S.calendar[k];
+  if(d&&d.done){shTot++;var dt=pd(k);if(dt.getFullYear()===shY&&dt.getMonth()===shM)shMc++}
+});
+lines.push("В этом месяце: "+shMc);
+lines.push("Всего отмечено: "+shTot);
+if(S.cycleAnchor){
+  var shTs=fd(shNow),shSeg=segmentFor(shTs),shLen=(shSeg&&shSeg.length)||S.cycleLength||8;
+  lines.push("Цикл: "+shLen+" дн., сегодня день Ц"+gcd(shTs));
+}
+const text=lines.join("\n");
+if(navigator.share)navigator.share({text:text}).catch(function(){});
+else if(navigator.clipboard)navigator.clipboard.writeText(text).then(function(){toast("Скопировано")}).catch(function(){alert(text)});
+else alert(text);
+};
+document.getElementById("export-data").onclick=function(){
+const a=document.createElement("a");
+a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));
+a.download="workout-"+fd(new Date())+".json";a.click();
+S.lastExportAt=fd(new Date());save();renderBackupHint();
+};
+var bwLogBtn=document.getElementById("bw-log");
+if(bwLogBtn)bwLogBtn.onclick=function(){
+var bwInp=document.getElementById("bw-input");
+var v=parseFloat((bwInp.value||"").replace(",","."));
+if(!v||v<=0){toast("Введи вес");return}
+logBodyWeight(v);
+bwInp.value="";
+rBodyWeight();
+toast("Записано: "+v+" кг");
+};
+function validateImport(p){
+if(!p||typeof p!=="object")return false;
+if(!p.plan||typeof p.plan!=="object")return false;
+if(!p.calendar||typeof p.calendar!=="object")return false;
+if(p.log&&!Array.isArray(p.log))return false;
+if(p.lastWeights&&typeof p.lastWeights!=="object")return false;
+return true;
+}
+document.getElementById("import-data").onclick=function(){
+const inp=document.createElement("input");inp.type="file";inp.accept="application/json";
+inp.onchange=function(e){
+const f=e.target.files[0];if(!f)return;
+const r=new FileReader();
+r.onload=function(){
+try{
+const p=JSON.parse(r.result);
+if(validateImport(p)){Object.assign(S,p);save();rToday();rCal();rPlan();rStats();toast("Импорт OK")}
+else toast("Неверный файл");
+}catch(err){toast("Ошибка")}
+};
+r.readAsText(f);
+};
+inp.click();
+};
+let mcb=null,mcbFocusReturn=null;
+function closeModal(){
+document.getElementById("modal").classList.remove("on");
+if(mcbFocusReturn&&mcbFocusReturn.focus)try{mcbFocusReturn.focus()}catch(e){}
+mcbFocusReturn=null;
+}
+function showM(title,text,cb){
+document.getElementById("modal-title").textContent=title;
+document.getElementById("modal-text").textContent=text;
+document.getElementById("modal").classList.add("on");mcb=cb;
+mcbFocusReturn=document.activeElement;
+var cancelBtn=document.getElementById("modal-cancel");
+if(cancelBtn)setTimeout(function(){cancelBtn.focus()},0);
+}
+document.getElementById("modal-confirm").onclick=function(){closeModal();if(mcb)mcb();mcb=null};
+document.getElementById("modal-cancel").onclick=function(){closeModal();mcb=null};
+document.addEventListener("keydown",function(e){
+if(e.key==="Escape"&&document.getElementById("modal").classList.contains("on")){closeModal();mcb=null}
+});
+document.getElementById("reset-all").onclick=function(){
+showM("Сбросить всё?","Все данные будут удалены.",function(){
+try{if(SA)localStorage.removeItem("workoutTracker8")}catch(e){}
+MS.data=null;
+S={plan:JSON.parse(JSON.stringify(DP)),calendar:{},cycleAnchor:null,cycleLength:8,cycleEpochs:[],log:[],firstOpen:false,createdAt:new Date().toISOString().slice(0,10),lastWeights:{},restSec:120,hintDismissed:false,bodyWeight:[],lastExportAt:null};
+SD=null;document.getElementById("day-detail").style.display="none";
+save();rToday();rCal();rPlan();rStats();toast("Сброшено");
+});
+};
+function updateCycleDisplay(){const el=document.getElementById("cycle-len-display");if(el)el.textContent=S.cycleLength||8}
+document.getElementById("cycle-minus").onclick=function(){S.cycleLength=Math.max(2,(S.cycleLength||8)-1);save();updateCycleDisplay();rToday();rCal();toast("Цикл: "+S.cycleLength+" дн.")};
+document.getElementById("cycle-plus").onclick=function(){S.cycleLength=Math.min(21,(S.cycleLength||8)+1);save();updateCycleDisplay();rToday();rCal();toast("Цикл: "+S.cycleLength+" дн.")};
+document.getElementById("splash-go").onclick=function(){
+ensureAudio();
+S.firstOpen=false;save();
+document.getElementById("splash").classList.add("hide");
+setTimeout(function(){document.getElementById("splash").style.display="none"},400);
+};
+
+document.getElementById("goto-today").onclick=function(){
+CM=new Date();CM.setDate(1);SD=fd(new Date());rCal();showDet(SD);
+};
+document.getElementById("auto-fill-cycle").onclick=function(){
+  var btn=this;
+  var originalText=btn.textContent;
+  var filled=autoFillCycle(14);
+  if(filled===null){
+    // цикл ещё не начат: делаем это такой же заметной реакцией, как успех,
+    // а не просто тостом, который легко пропустить - и ведём туда, где это чинится
+    btn.classList.add("warn");
+    btn.textContent="⚠ Сначала начни цикл";
+    clearTimeout(btn._doneTimer);
+    btn._doneTimer=setTimeout(function(){
+      btn.classList.remove("warn");
+      btn.textContent=originalText;
+    },2500);
+    sw("today");
+    var startBtn=document.getElementById("startc");
+    if(startBtn){
+      startBtn.scrollIntoView({behavior:"smooth",block:"center"});
+      startBtn.classList.add("pulse-attn");
+      setTimeout(function(){startBtn.classList.remove("pulse-attn")},1700);
+    }
+    return;
+  }
+  // видимая реакция на сам тап: подсветка кнопки и временный текст с результатом
+  btn.classList.add("done");
+  btn.textContent=filled?("✓ Заполнено дней: "+filled):"✓ Уже всё заполнено";
+  clearTimeout(btn._doneTimer);
+  btn._doneTimer=setTimeout(function(){
+    btn.classList.remove("done");
+    btn.textContent=originalText;
+  },2500);
+  // и самое наглядное доказательство - сразу показываем календарь с расставленными тренировками
+  sw("calendar");
+  SD=fd(new Date());
+  rCal();
+  showDet(SD);
+  var cal=document.getElementById("calendar-days");
+  if(cal)cal.scrollIntoView({behavior:"smooth",block:"start"});
+};
+document.getElementById("wo-close").onclick=function(){closeWorkout()};
+document.getElementById("wo-finish").onclick=function(){
+var ts=fd(new Date());
+if(!S.calendar[ts])S.calendar[ts]={type:null,notes:"",done:false,logs:{}};
+S.calendar[ts].done=true;
+if(!S.log.find(function(l){return l.date===ts}))S.log.push({date:ts,type:S.calendar[ts].type||"custom",notes:S.calendar[ts].notes||""});
+save();
+var type=S.calendar[ts].type;
+var prog=countWorkoutProgress(type, S.calendar[ts].logs);
+var list=document.getElementById("wo-list");
+var sum=document.getElementById("wo-summary");
+var progEl=document.getElementById("wo-progress");
+if(list)list.style.display="none";
+if(progEl)progEl.style.display="none";
+if(sum){
+  sum.style.display="block";
+  sum.innerHTML='<h3>Готово</h3><p class="mu">Подходов: <strong style="color:var(--ac2)">'+prog.done+'</strong> из '+prog.total+'</p><p class="mu" style="margin-top:8px">'+tl(type)+'</p><div class="btn-row" style="margin-top:16px"><button type="button" class="btn" id="wo-sum-close">Закрыть</button></div>';
+  var sc=document.getElementById("wo-sum-close");
+  if(sc)sc.onclick=function(){closeWorkout()};
+}
+toast("Тренировка завершена");
+vibratePulse();
+};
+var progressExSelectEl=document.getElementById("progress-ex-select");
+if(progressExSelectEl)progressExSelectEl.onchange=function(){rProgressChart()};
+document.getElementById("wo-timer-skip").onclick=function(){
+if(woTimer){clearInterval(woTimer);woTimer=null}
+var box=document.getElementById("wo-timer-box");if(box)box.style.display="none";
+};
+
+
+(function(){
+var el=document.getElementById("calendar-days");
+if(!el)return;
+var x0=null;
+el.addEventListener("touchstart",function(e){x0=e.changedTouches[0].screenX},{passive:true});
+el.addEventListener("touchend",function(e){
+if(x0===null)return;
+var x1=e.changedTouches[0].screenX;var dx=x1-x0;x0=null;
+if(Math.abs(dx)<50)return;
+if(dx>0){CM.setMonth(CM.getMonth()-1);rCal()}
+else{CM.setMonth(CM.getMonth()+1);rCal()}
+},{passive:true});
+})();
+
+load();
+updateCycleDisplay();
+if(!S.firstOpen)document.getElementById("splash").style.display="none";
+rToday();
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
+</script>
+</body>
+</html>
