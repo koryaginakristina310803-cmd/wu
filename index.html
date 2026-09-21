@@ -6,9 +6,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="Тренировки"/>
-<meta name="theme-color" content="#FBF6F4"/>
+<meta name="theme-color" content="#FBF6F4" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#211C19" media="(prefers-color-scheme: dark)"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
 <title>Трекер тренировок</title>
-<script type="text/javascript" src="https://gc.kes.v2.scr.kaspersky-labs.com/7EA5E9BB-55E1-4C31-9C21-4943DDFED2E4/main.js?attr=7wP0-Rf062kAHbq4DtbKRBodF8OPC9NFbOd9rvtqyZzXg7HuTCO-9W5FZhCJK5lZVON3A6vth2jJF4JFclOAaSgvlpeR8kCZ_8upRrLRtvVL90yD2-z-JdkkhXdcRbNNzOZ1-IrPq9QuW46wuoBWBkfm52DoH9XJEmg-4IICnTZN3HhUJ5mxLSentihvE4OVrCdE5icRrQ8MZwCLnOyIsgosOseI5RUb2roe-KvpPlL0G1AcAweTjPSkpnxJR1t9Bww7PW-A9jzO2DIHuSZhf0VbBfN1w8NQEI2q2IF3cf9udRO-qJ3sOKEI51uOjowayI1LcL-43wgU--WN76YWdmb14-yIoaAadjyYdGkMtIG0EE6jdr763MkrQSq8b_1SdjAsbO5fzAmJKGr6HR6KhbnRWHB_DibCdarilUrfAhl8HY8tV0dKAqUnW9A2hWapfHIC-OwlrhGEtghgEnIgB86y6yltLgg2p8-fz9WYy7-YTSB5-uViyzjKVqtgZ8m-bztVqEhAC5SYD2ZY7aTab5QWKJoPSAjIEm_wauEOd33rStQG8VW9_SrhMWt195e4cpuRxy48WFiwNQYZWBpOfFqPcGPNL_uYe7KGr9Kr9d5WG8SpdbhC8D-y_MGsBdoxrs7Wli2keD93hj5aCjopgpCCylxhippHJGUfHpCti2JU93OoiixsY0TqdwtEsBJ9" charset="UTF-8"></script><style>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600&display=swap');
 :root{
   --bg:#FBF6F4;--bg2:#F7EFEA;--card:#FFFFFF;--c2:#F3E8E2;
@@ -17,6 +20,7 @@
   --d1:#C9B0D8;--d2:#A8C9BE;--d3:#E0B8A0;--up:#A8BFD4;--rs:#C4B5AE;
   --nh:68px;--sb:env(safe-area-inset-bottom,0px);--radius:20px;
   --shadow:0 4px 24px rgba(92,74,61,.06);
+  --nav-pill:rgba(196,164,132,.16);
   --font-display:'Cormorant Garamond',Georgia,serif;
   --font-body:'Montserrat',-apple-system,sans-serif;
 }
@@ -101,7 +105,7 @@ body{
 .ex{background:linear-gradient(145deg,#F7EFEA,#F3E8E2);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:10px}
 .ex .nm{font-weight:600;font-size:.92rem;margin-bottom:2px;line-height:1.35;color:var(--tx);word-break:break-word}
 .ex .st{color:var(--ac2);font-size:.8rem;font-weight:600;margin-bottom:10px;white-space:nowrap}
-.elog{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border-radius:12px;padding:10px 12px;border:1px solid var(--bd)}
+.elog{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:#fff;border-radius:12px;padding:10px 12px;border:1px solid var(--bd)}
 .elog label{font-size:.7rem;color:var(--mu);width:100%;letter-spacing:.04em;text-transform:uppercase}
 .elog input{width:72px;background:var(--bg2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);padding:10px 8px;font-size:1rem;text-align:center;font-weight:600;font-family:var(--font-body)}
 .elog input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px var(--ac-soft)}
@@ -113,12 +117,12 @@ body{
 .ch h2{font-family:var(--font-display);font-size:1.35rem;text-transform:capitalize;font-weight:600;color:#8B7355}
 .nb{background:var(--card);border:1px solid var(--bd);color:var(--tx);width:44px;height:44px;border-radius:14px;font-size:1.2rem;cursor:pointer;box-shadow:var(--shadow)}
 .wd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:.68rem;color:var(--mu);margin-bottom:6px;font-weight:500}
-.ds{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.ds{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .day{
-  aspect-ratio:1;background:linear-gradient(160deg,#fff,#FBF6F4);border:1px solid var(--bd);
-  border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;position:relative;font-size:.88rem;font-weight:500;min-height:50px;
-  box-shadow:0 1px 4px rgba(92,74,61,.03);padding:6px 2px 4px;overflow:hidden;
+  background:linear-gradient(160deg,#fff,#FBF6F4);border:1px solid var(--bd);
+  border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  cursor:pointer;position:relative;font-size:.88rem;font-weight:500;min-height:64px;
+  box-shadow:0 1px 4px rgba(92,74,61,.03);padding:7px 2px 6px;
 }
 .day.om{opacity:.35}
 .day.td{box-shadow:0 0 0 2px var(--ac)}
@@ -136,11 +140,12 @@ body{
 }
 .day .tags{
   display:flex;flex-wrap:wrap;gap:2px;justify-content:center;align-items:center;
-  margin-top:3px;max-width:100%;z-index:1;
+  margin-top:4px;max-width:100%;z-index:1;
 }
 .day .bg{
-  position:static;font-size:.5rem;font-weight:700;padding:1px 4px;
-  border-radius:5px;color:#5C4A3D;line-height:1.2;
+  position:static;font-size:.57rem;font-weight:700;padding:2px 3px;
+  border-radius:6px;color:#5C4A3D;line-height:1.2;text-align:center;
+  white-space:normal;overflow-wrap:break-word;max-width:100%;letter-spacing:-.01em;
 }
 .bg.d1{background:#EDE4F5}.bg.d2{background:#DCEEE8}.bg.d3{background:#F5E6DC}
 .bg.up{background:#DCE6F0}.bg.rs{background:#EBE4E0}.bg.cu{background:#F0E4DC}
@@ -240,7 +245,21 @@ textarea.nt:focus{outline:none;border-color:var(--ac)}
   width:100%;margin-top:10px;padding:12px;border-radius:14px;
   border:1px dashed var(--ac);background:rgba(196,164,132,.08);
   color:var(--ac2);font-size:.85rem;font-weight:500;cursor:pointer;font-family:var(--font-body);
+  transition:transform .1s ease,background .2s ease,border-color .2s ease,color .2s ease;
 }
+.auto-fill:active{transform:scale(.97)}
+.auto-fill.done{
+  border:1px solid var(--ok);background:rgba(143,184,154,.18);color:#5a8a66;font-weight:600;
+}
+.auto-fill.warn{
+  border:1px solid #C97B5F;background:rgba(201,123,95,.14);color:#A85D42;font-weight:600;
+}
+@keyframes pulseAttention{
+  0%{box-shadow:0 0 0 0 rgba(196,164,132,.55)}
+  70%{box-shadow:0 0 0 14px rgba(196,164,132,0)}
+  100%{box-shadow:0 0 0 0 rgba(196,164,132,0)}
+}
+.pulse-attn{animation:pulseAttention .8s ease-out 2}
 .empty-soft{text-align:center;color:var(--mu);padding:28px 16px;font-size:.92rem;line-height:1.5}
 
 
@@ -310,16 +329,16 @@ textarea.nt:focus{outline:none;border-color:var(--ac)}
 
 
 .ni .i{
-  width:24px;height:24px;display:block;margin:0 auto 2px;
+  width:24px;height:24px;display:block;margin:0 auto 2px;border-radius:10px;
   background-size:contain;background-repeat:no-repeat;background-position:center;
-  font-size:0;opacity:.7;transition:opacity .15s,transform .15s;
+  font-size:0;opacity:.7;transition:opacity .15s,transform .15s,background-color .15s,width .15s;
 }
-.ni.on .i{opacity:1;transform:scale(1.06)}
+.ni.on .i{opacity:1;transform:scale(1.06);width:36px;background-color:var(--nav-pill)}
 .ni .i.ic-today{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3c-1.5 2.5-4 4.2-4 7a4 4 0 008 0c0-2.8-2.5-4.5-4-7z'/%3E%3Cpath d='M8.5 14.5c.8 1.2 1.8 2 3.5 2.5 1.7-.5 2.7-1.3 3.5-2.5'/%3E%3Cpath d='M9 17.5c.7.8 1.7 1.3 3 1.5 1.3-.2 2.3-.7 3-1.5'/%3E%3C/svg%3E");
 }
 .ni .i.ic-wo{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 5v2M12 17v2M5 12h2M17 12h2M7.05 7.05l1.4 1.4M15.55 15.55l1.4 1.4M7.05 16.95l1.4-1.4M15.55 8.45l1.4-1.4'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 8.5v7M4.5 10v4M17.5 8.5v7M19.5 10v4M8.5 12h7'/%3E%3Crect x='2.7' y='9.7' width='2.3' height='4.6' rx='1'/%3E%3Crect x='19' y='9.7' width='2.3' height='4.6' rx='1'/%3E%3C/svg%3E");
 }
 .ni .i.ic-cal{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8957A' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15' rx='2.5'/%3E%3Cpath d='M3.5 10h17M8 3.5v3M16 3.5v3'/%3E%3Ccircle cx='8.5' cy='14' r='1' fill='%23B8957A' stroke='none'/%3E%3Ccircle cx='12' cy='14' r='1' fill='%23B8957A' stroke='none'/%3E%3Ccircle cx='15.5' cy='14' r='1' fill='%23B8957A' stroke='none'/%3E%3C/svg%3E");
@@ -334,7 +353,7 @@ textarea.nt:focus{outline:none;border-color:var(--ac)}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3c-1.5 2.5-4 4.2-4 7a4 4 0 008 0c0-2.8-2.5-4.5-4-7z'/%3E%3Cpath d='M8.5 14.5c.8 1.2 1.8 2 3.5 2.5 1.7-.5 2.7-1.3 3.5-2.5'/%3E%3Cpath d='M9 17.5c.7.8 1.7 1.3 3 1.5 1.3-.2 2.3-.7 3-1.5'/%3E%3C/svg%3E");
 }
 .ni.on .i.ic-wo{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 5v2M12 17v2M5 12h2M17 12h2M7.05 7.05l1.4 1.4M15.55 15.55l1.4 1.4M7.05 16.95l1.4-1.4M15.55 8.45l1.4-1.4'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 8.5v7M4.5 10v4M17.5 8.5v7M19.5 10v4M8.5 12h7'/%3E%3Crect x='2.7' y='9.7' width='2.3' height='4.6' rx='1'/%3E%3Crect x='19' y='9.7' width='2.3' height='4.6' rx='1'/%3E%3C/svg%3E");
 }
 .ni.on .i.ic-cal{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15' rx='2.5'/%3E%3Cpath d='M3.5 10h17M8 3.5v3M16 3.5v3'/%3E%3Ccircle cx='8.5' cy='14' r='1' fill='%238B7355' stroke='none'/%3E%3Ccircle cx='12' cy='14' r='1' fill='%238B7355' stroke='none'/%3E%3Ccircle cx='15.5' cy='14' r='1' fill='%238B7355' stroke='none'/%3E%3C/svg%3E");
@@ -346,6 +365,41 @@ textarea.nt:focus{outline:none;border-color:var(--ac)}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B7355' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 16l3.5-3.5 3 3L19 8'/%3E%3Cpath d='M15 8h4v4'/%3E%3C/svg%3E");
 }
 
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#211C19;--bg2:#2A2320;--card:#2F2723;--c2:#3A2F29;
+    --ac:#C9A67D;--ac2:#E0BD91;--ac-soft:rgba(201,166,125,.24);
+    --tx:#EFE6DD;--mu:#B5A493;--bd:#4A3D34;--ok:#8FB89A;--wn:#D4B896;
+    --shadow:0 4px 24px rgba(0,0,0,.35);
+    --nav-pill:rgba(201,166,125,.22);
+  }
+  body{
+    background:
+      radial-gradient(ellipse 100% 70% at 50% -15%,rgba(140,105,80,.22),transparent 55%),
+      radial-gradient(ellipse 50% 40% at 0% 100%,rgba(110,90,75,.18),transparent 50%),
+      linear-gradient(180deg,#211C19 0%,#241E1B 40%,#2A2320 100%);
+  }
+  .splash{
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%,rgba(140,105,80,.28),transparent 55%),
+      radial-gradient(ellipse 70% 50% at 10% 80%,rgba(110,95,80,.22),transparent 50%),
+      linear-gradient(165deg,#211C19 0%,#2A2320 45%,#2F2723 100%);
+  }
+  .splash h1,.th h2,.ch h2,#detail-title,.wo-top h2,.hint-title,.ex-block-title{color:#E7C9A0}
+  .card,.pd,.li,.sc,.nb,.week-sum .ws,.day{background:linear-gradient(165deg,var(--card),var(--bg2));border-color:var(--bd)}
+  .ex,.chip,.elog,.day{background:var(--bg2)}
+  .ei{background:var(--bg2)}
+  .btn.sec{background:linear-gradient(135deg,var(--bg2),var(--c2));color:var(--tx);border-color:var(--bd)}
+  .tb{background:var(--c2);color:var(--mu)}
+  textarea.nt,.elog input{background:var(--bg2);color:var(--tx);border-color:var(--bd)}
+  .mo{background:rgba(0,0,0,.5)}
+  .rest-presets button{background:var(--bg2);color:var(--tx);border-color:var(--bd)}
+  .bnav{background:linear-gradient(180deg,rgba(47,39,35,.92),rgba(42,35,32,.95))}
+  .hint-banner{background:linear-gradient(160deg,var(--card) 0%,var(--bg2) 100%)}
+  .ap-row{background:linear-gradient(145deg,var(--bg2),var(--c2))}
+  .wo-overlay{background:var(--bg)}
+  select{background:var(--c2);color:var(--tx)}
+}
 </style>
 </head>
 <body>
@@ -400,13 +454,14 @@ textarea.nt:focus{outline:none;border-color:var(--ac)}
   <div class="card" id="cycle-settings" style="margin-bottom:14px">
     <div style="font-weight:600;margin-bottom:10px;color:#8B7355;font-family:var(--font-display);font-size:1.15rem">Длина цикла</div>
     <p class="mu" style="font-size:.84rem;margin-bottom:12px">Сколько дней в тренировочном цикле (обычно 8).</p>
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
       <button type="button" class="nb" id="cycle-minus" style="width:44px;height:44px;font-size:1.3rem">-</button>
       <div id="cycle-len-display" style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--ac2);min-width:48px;text-align:center">8</div>
       <button type="button" class="nb" id="cycle-plus" style="width:44px;height:44px;font-size:1.3rem">+</button>
       <span class="mu" style="font-size:.85rem">дней</span>
     </div>
     <button type="button" class="auto-fill" id="auto-fill-cycle">Заполнить календарь по циклу на 2 недели вперёд</button>
+    <p class="mu" style="font-size:.78rem;margin-top:8px">Тренировочные дни распределяются равномерно по всей длине цикла, между ними — дни отдыха.</p>
   </div>
   <div id="plan-grid"></div>
 </div>
@@ -414,6 +469,15 @@ textarea.nt:focus{outline:none;border-color:var(--ac)}
   <div class="week-sum" id="week-sum">
     <div class="ws"><div class="v" id="ws-week">0</div><div class="l">на этой неделе</div></div>
     <div class="ws"><div class="v" id="ws-prev">0</div><div class="l">на прошлой</div></div>
+  </div>
+  <div class="card" id="bw-card">
+    <div style="font-weight:600;margin-bottom:8px;color:#8B7355">Вес тела</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+      <input type="number" inputmode="decimal" id="bw-input" placeholder="кг" aria-label="Вес тела, кг" style="width:90px;background:var(--bg2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);padding:10px 8px;font-size:1rem;text-align:center;font-weight:600;font-family:var(--font-body)"/>
+      <button type="button" class="btn" id="bw-log" style="width:auto;padding:10px 16px">Записать сегодня</button>
+    </div>
+    <p class="mu" id="bw-summary" style="font-size:.85rem;margin-bottom:8px"></p>
+    <div class="bars" id="bw-bars"></div>
   </div>
   <div class="sg">
     <div class="sc"><div class="v" id="stat-month">0</div><div class="l">тренировок в месяце</div></div>
@@ -425,12 +489,19 @@ textarea.nt:focus{outline:none;border-color:var(--ac)}
     <div class="bars" id="load-bars"></div>
     <p class="mu" style="font-size:.78rem;margin-top:8px">Столбик - выполненные тренировки</p>
   </div>
+  <div class="card">
+    <div style="font-weight:600;margin-bottom:8px;color:#8B7355">Прогресс по упражнению</div>
+    <select id="progress-ex-select" aria-label="Выбор упражнения" style="width:100%;background:var(--c2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);padding:10px;margin-bottom:10px;font-size:.88rem;font-family:var(--font-body)"></select>
+    <div class="bars" id="progress-bars"></div>
+    <p class="mu" id="progress-caption" style="font-size:.78rem;margin-top:8px">Максимальный вес за тренировку в этом упражнении</p>
+  </div>
   <div class="card" id="deload-hint" style="display:none;border-color:rgba(196,164,132,.4)">
     <div style="font-weight:600;color:var(--ac2)">Можно чуть снизить интенсивность</div>
     <p class="mu" style="margin-top:6px;font-size:.85rem">Прошло больше 6 недель. Оставляй около 3 повторов в запасе до отказа.</p>
   </div>
   <h3 style="margin:16px 0 10px;font-family:var(--font-display);font-size:1.2rem;color:#8B7355">История</h3>
   <div id="log-content"></div>
+  <p class="mu" id="backup-hint" style="text-align:center;font-size:.78rem;margin-top:14px"></p>
   <div class="fa">
     <button type="button" id="share-progress">Поделиться</button>
     <button type="button" id="export-data">Экспорт</button>
@@ -475,7 +546,7 @@ textarea.nt:focus{outline:none;border-color:var(--ac)}
 
 <div class="toast" id="toast"></div>
 <div class="mo" id="modal">
-  <div class="md">
+  <div class="md" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-text">
     <h3 id="modal-title" style="font-family:var(--font-display);color:#8B7355">Подтверждение</h3>
     <p id="modal-text" class="mu"></p>
     <div class="btn-row">
@@ -518,7 +589,7 @@ const UT={
 "Спина + плечи":[{name:"Тяга верхнего блока",sets:"3 x 10"},{name:"Тяга гантели в наклоне",sets:"3 x 10"},{name:"Жим гантелей сидя",sets:"3 x 10"},{name:"Махи в стороны",sets:"3 x 12"}],
 "Полный верх":[{name:"Жим гантелей лежа",sets:"3 x 10"},{name:"Тяга верхнего блока",sets:"3 x 10"},{name:"Жим гантелей сидя",sets:"3 x 10"},{name:"Подъем на бицепс",sets:"2 x 12"},{name:"Разгибания на трицепс",sets:"2 x 12"}]
 };
-let S={plan:JSON.parse(JSON.stringify(DP)),calendar:{},cycleAnchor:null,cycleLength:8,log:[],firstOpen:true,createdAt:null,lastWeights:{},restSec:120,hintDismissed:false};
+let S={plan:JSON.parse(JSON.stringify(DP)),calendar:{},cycleAnchor:null,cycleLength:8,cycleEpochs:[],log:[],firstOpen:true,createdAt:null,lastWeights:{},restSec:120,hintDismissed:false,bodyWeight:[],lastExportAt:null};
 let CM=new Date();CM.setDate(1);let SD=null;let SA=false;const MS={data:null};
 function chk(){try{localStorage.setItem("__t","1");localStorage.removeItem("__t");SA=true}catch(e){SA=false}}
 function load(){
@@ -533,9 +604,27 @@ else S.plan=p.plan||S.plan;
 S.calendar=p.calendar||{};
 S.cycleAnchor=p.cycleAnchor||null;
 S.cycleLength=p.cycleLength||8;
+// cycleEpochs хранит историю "с какого дня действует какая длина цикла", чтобы
+// смена длины никогда не переписывала смысл уже прошедших дней задним числом.
+// Для файлов, сохранённых до появления этого поля, восстанавливаем один отрезок
+// из старых cycleAnchor/cycleLength.
+if(Array.isArray(p.cycleEpochs)&&p.cycleEpochs.length)S.cycleEpochs=p.cycleEpochs;
+else if(S.cycleAnchor)S.cycleEpochs=[{from:S.cycleAnchor,length:S.cycleLength}];
+else S.cycleEpochs=[];
 S.log=p.log||[];
 S.firstOpen=p.firstOpen===false?false:true;
-S.createdAt=p.createdAt||null;S.lastWeights=p.lastWeights||{};S.restSec=p.restSec||120;S.hintDismissed=!!p.hintDismissed;
+S.createdAt=p.createdAt||null;S.restSec=p.restSec||120;S.hintDismissed=!!p.hintDismissed;
+// lastWeights раньше хранил просто число (последний вес). Теперь хранит {w,r} - последние
+// вес И повторы, чтобы оба поля подставлялись плейсхолдером в следующий раз. Старые
+// записи-числа/строки оборачиваем в объект, чтобы не потерять уже накопленную историю.
+var rawLW=p.lastWeights||{};
+S.lastWeights={};
+Object.keys(rawLW).forEach(function(k){
+  var v=rawLW[k];
+  S.lastWeights[k]=(v&&typeof v==="object")?{w:v.w||"",r:v.r||""}:{w:v||"",r:""};
+});
+S.bodyWeight=Array.isArray(p.bodyWeight)?p.bodyWeight:[];
+S.lastExportAt=p.lastExportAt||null;
 }
 }catch(e){}
 if(!S.createdAt)S.createdAt=new Date().toISOString().slice(0,10);
@@ -549,12 +638,50 @@ function fd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")
 function pd(s){const a=s.split("-").map(Number);return new Date(a[0],a[1]-1,a[2])}
 function mn(d){return d.toLocaleDateString("ru-RU",{month:"long",year:"numeric"})}
 function dn(d){return d.toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"})}
-function tl(t){const m={1:"Низ 1",2:"Низ 2",3:"Низ 3",upper:"Верх",rest:"Отдых",custom:"Своё"};return m[t]||t||"-"}
+function tl(t){
+  // Название типа дня можно переименовать в плане (вкладка "План") - подставляем его
+  // отовсюду, где раньше было жёстко "Низ 1"/"Низ 2" и т.п., чтобы переименование
+  // реально применялось везде, а не только в заголовке карточки плана.
+  if(t==="custom")return "Своё";
+  if(S.plan&&S.plan[t]&&S.plan[t].title)return S.plan[t].title;
+  const m={1:"Низ 1",2:"Низ 2",3:"Низ 3",upper:"Верх",rest:"Отдых",custom:"Своё"};
+  return m[t]||t||"-";
+}
 function tc(t){return t==="1"?"d1":t==="2"?"d2":t==="3"?"d3":t==="upper"?"up":t==="rest"?"rs":"cu"}
+function startNewCycleEpoch(dateStr){
+// Новая точка отсчёта цикла (Ц1) с указанного дня, с длиной, которая
+// действует прямо сейчас (S.cycleLength). Более ранние отрезки НЕ стираются -
+// они остаются в истории, чтобы уже прошедшие дни продолжали считаться по
+// той длине цикла, которая реально действовала на тот момент. Сами типы
+// дней и подходы в календаре при этом не трогаются.
+if(!S.cycleEpochs)S.cycleEpochs=[];
+// Отрезки, начинающиеся в тот же день или позже нового, заменяются им
+// (например, при повторном нажатии "Ц1" на ту же дату), а вся более ранняя
+// история сохраняется.
+S.cycleEpochs=S.cycleEpochs.filter(function(e){return e.from<dateStr});
+S.cycleEpochs.push({from:dateStr,length:S.cycleLength||8});
+S.cycleAnchor=dateStr;
+}
+function clearCycle(){
+S.cycleAnchor=null;
+S.cycleEpochs=[];
+}
+function segmentFor(ds){
+// возвращает {from,length} - отрезок цикла, действовавший на дату ds:
+// последний по дате начала отрезок, чей "from" не позже ds.
+var epochs=(S.cycleEpochs||[]).slice().sort(function(a,b){return a.from<b.from?-1:a.from>b.from?1:0});
+if(!epochs.length)return null;
+var seg=epochs[0];
+for(var i=0;i<epochs.length;i++){
+if(epochs[i].from<=ds)seg=epochs[i];else break;
+}
+return seg;
+}
 function gcd(ds){
-if(!S.cycleAnchor)return null;
-const L=Math.max(2,Math.min(21,S.cycleLength||8));
-const a=pd(S.cycleAnchor),d=pd(ds);
+const seg=segmentFor(ds);
+if(!seg)return null;
+const L=Math.max(2,Math.min(21,seg.length||8));
+const a=pd(seg.from),d=pd(ds);
 return(((Math.floor((d-a)/86400000)%L)+L)%L)+1;
 }
 function streak(){
@@ -568,55 +695,93 @@ else break;
 return s;
 }
 function pl(n){const a=n%10,b=n%100;if(a===1&&b!==11)return"день";if(a>=2&&a<=4&&(b<10||b>=20))return"дня";return"дней"}
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 
-
-function defaultCycleType(cycleDay){
-  var L=S.cycleLength||8;
-  var map={1:"1",2:"2",3:"3",4:"upper",5:"rest",6:"1",7:"2",8:"3"};
-  if(cycleDay<=5) return map[cycleDay]||"rest";
-  var r=((cycleDay-1)%5)+1;
-  return map[r]||"rest";
+// Тренировочные типы дней, которые нужно равномерно распределить по циклу,
+// оставляя между ними дни отдыха, вместо того чтобы ставить их подряд.
+var CYCLE_WORKOUT_TYPES=["1","2","3","upper"];
+function defaultCycleType(cycleDay,forLength){
+  var L=Math.max(2,Math.min(21,forLength||S.cycleLength||8));
+  // Число тренировочных дней в цикле ограничиваем половиной длины цикла (округляя вниз).
+  // Иначе при коротких циклах (5-7 дней) на все 4 типа тренировок просто не остаётся
+  // места для отдыха между ними, и они снова расставляются подряд, как "Низ 1" и "Низ 2".
+  // При L=8 и больше это ничего не меняет - там как и раньше используются все 4 типа.
+  var N=Math.max(1,Math.min(CYCLE_WORKOUT_TYPES.length,Math.floor(L/2)));
+  var idx=((cycleDay-1)%L+L)%L; // 0-индексный день внутри цикла
+  for(var i=0;i<N;i++){
+    var pos=Math.floor(i*L/N);
+    if(pos===idx)return CYCLE_WORKOUT_TYPES[i];
+  }
+  return "rest";
 }
 function autoFillCycle(daysAhead){
-  if(!S.cycleAnchor){toast("Сначала начни цикл");return}
+  if(!S.cycleAnchor||!S.cycleEpochs||!S.cycleEpochs.length){toast("Сначала начни цикл");return null}
   daysAhead=daysAhead||14;
+  // Заполнение всегда начинается с самого дня цикла (Ц1), а не с сегодняшнего дня -
+  // если Ц1 был назначен в прошлом или будущем, эти дни тоже должны попасть в заполнение.
+  // При этом диапазон всегда дотягивается минимум на daysAhead дней вперёд от сегодня,
+  // даже если старт цикла был давно.
+  var start=pd(S.cycleAnchor);
+  var today=new Date();today.setHours(12,0,0,0);
+  var endFrom=today.getTime()>start.getTime()?today:start;
+  var end=new Date(endFrom);end.setDate(end.getDate()+daysAhead-1);
   var filled=0;
-  for(var i=0;i<daysAhead;i++){
-    var d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+i);
+  for(var d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
     var str=fd(d);
     var cd=gcd(str);
     if(!cd) continue;
+    var seg=segmentFor(str);
     if(!S.calendar[str]) S.calendar[str]={type:null,notes:"",done:false,logs:{}};
     if(!S.calendar[str].type){
-      S.calendar[str].type=defaultCycleType(cd);
+      S.calendar[str].type=defaultCycleType(cd,seg&&seg.length);
       filled++;
     }
   }
   save();rToday();rCal();
   toast(filled?"Заполнено: "+filled+" дн.":"Уже заполнено");
+  return filled;
 }
 function lastWeightFor(type, idx){
   var key=type+"_"+idx;
-  return (S.lastWeights&&S.lastWeights[key])||"";
+  var v=S.lastWeights&&S.lastWeights[key];
+  return (v&&v.w)||"";
 }
-function rememberWeight(type, idx, w){
-  if(!w) return;
+function lastRepsFor(type, idx){
+  var key=type+"_"+idx;
+  var v=S.lastWeights&&S.lastWeights[key];
+  return (v&&v.r)||"";
+}
+function rememberSet(type, idx, w, r){
+  if(!w&&!r) return;
   if(!S.lastWeights) S.lastWeights={};
-  S.lastWeights[type+"_"+idx]=w;
+  var key=type+"_"+idx;
+  var prev=S.lastWeights[key]||{w:"",r:""};
+  S.lastWeights[key]={w:w||prev.w,r:r||prev.r};
 }
-var woTimer=null, woLeft=0;
+var woTimer=null, woEndAt=0, woTimerFired=true;
 function vibratePulse(){
   try{if(navigator.vibrate)navigator.vibrate([200,100,200])}catch(e){}
 }
+// Единый AudioContext создаётся/разблокируется по прямому тапу пользователя
+// (см. ensureAudio() в обработчиках кнопок) - на iOS Safari звук, запущенный
+// изнутри setInterval без предшествующего жеста, часто просто не проигрывается.
+var audioCtx=null;
+function ensureAudio(){
+  try{
+    if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended")audioCtx.resume();
+  }catch(e){}
+}
 function playRestEnd(){
   try{
-    var ctx=new (window.AudioContext||window.webkitAudioContext)();
-    var o=ctx.createOscillator();var g=ctx.createGain();
-    o.connect(g);g.connect(ctx.destination);
-    o.frequency.value=880;g.gain.value=0.08;
-    o.start();
-    setTimeout(function(){o.stop();ctx.close()},300);
+    ensureAudio();
+    if(audioCtx){
+      var o=audioCtx.createOscillator();var g=audioCtx.createGain();
+      o.connect(g);g.connect(audioCtx.destination);
+      o.frequency.value=880;g.gain.value=0.08;
+      o.start();
+      setTimeout(function(){try{o.stop()}catch(e){}},300);
+    }
   }catch(e){}
   vibratePulse();
 }
@@ -631,30 +796,41 @@ function releaseWake(){
 }
 function startRestTimer(sec){
   sec=sec||S.restSec||120;
-  woLeft=sec;
+  // Храним момент окончания отдыха, а не убывающий счётчик секунд: так таймер
+  // не сбивается, если экран телефона погас или вкладка была свёрнута -
+  // setInterval может пропускать тики в фоне, а Date.now() - нет.
+  woEndAt=Date.now()+sec*1000;
+  woTimerFired=false;
   var box=document.getElementById("wo-timer-box");
   if(box) box.style.display="block";
   function tick(){
-    var m=Math.floor(woLeft/60), s=woLeft%60;
+    var remaining=Math.max(0,Math.round((woEndAt-Date.now())/1000));
+    var m=Math.floor(remaining/60), s=remaining%60;
     var el=document.getElementById("wo-time");
     if(el) el.textContent=m+":"+String(s).padStart(2,"0");
-    if(woLeft<=0){
+    if(remaining<=0&&!woTimerFired){
+      woTimerFired=true;
       clearInterval(woTimer);woTimer=null;
       if(box) box.style.display="none";
       playRestEnd();
       toast("Отдых закончен");
-      return;
     }
-    woLeft--;
   }
   if(woTimer) clearInterval(woTimer);
   tick();
-  woTimer=setInterval(tick,1000);
+  woTimer=setInterval(tick,250);
 }
+document.addEventListener("visibilitychange",function(){
+  if(!document.hidden&&woTimer){
+    var el=document.getElementById("wo-time");
+    var remaining=Math.max(0,Math.round((woEndAt-Date.now())/1000));
+    if(el)el.textContent=Math.floor(remaining/60)+":"+String(remaining%60).padStart(2,"0");
+  }
+});
 
 function parseSetsCount(setsStr){
   if(!setsStr)return 3;
-  var m=String(setsStr).match(/(\d+)\s*[xх×X]/);
+  var m=String(setsStr).match(/(\d+)\s*[xхXХ×]/);
   if(m)return Math.max(1,Math.min(10,parseInt(m[1],10)));
   return 3;
 }
@@ -696,9 +872,10 @@ function openWorkout(){
     var nSets=parseSetsCount(ex.sets);
     var logs=S.calendar[ts].logs[String(idx)]||S.calendar[ts].logs[idx]||[];
     var lw=lastWeightFor(data.type, idx);
+    var lr=lastRepsFor(data.type, idx);
     h+='<div class="ex-block">';
-    h+='<div class="ex-block-title">'+(idx+1)+'. '+ex.name+'</div>';
-    h+='<div class="mu" style="font-size:.8rem;margin-bottom:8px;white-space:nowrap">План: '+ex.sets+(lw?' · прошлый вес: '+lw+' кг':'')+'</div>';
+    h+='<div class="ex-block-title">'+(idx+1)+'. '+esc(ex.name)+'</div>';
+    h+='<div class="mu" style="font-size:.8rem;margin-bottom:8px;white-space:nowrap">План: '+esc(ex.sets)+(lw?' · прошлый вес: '+esc(lw)+' кг':'')+'</div>';
     for(var s=0;s<nSets;s++){
       var done=logs[s];
       var hasDone=done&&(done.w||done.r||done.done||done.skipped);
@@ -713,8 +890,8 @@ function openWorkout(){
         h+='<div class="ap-actions"><button type="button" class="btn sec ap-redo" data-ex="'+idx+'" data-set="'+s+'">Переделать</button></div>';
       }else{
         h+='<div class="elog ap-inputs" style="display:none;margin-bottom:8px"><label>Вес и повторы</label>';
-        h+='<input type="number" inputmode="decimal" placeholder="кг" class="wi" value="'+lw+'"/><span class="x">x</span>';
-        h+='<input type="number" inputmode="numeric" placeholder="раз" class="ri"/></div>';
+        h+='<input type="number" inputmode="decimal" placeholder="кг" class="wi" aria-label="Вес, кг" value="'+esc(lw)+'"/><span class="x">x</span>';
+        h+='<input type="number" inputmode="numeric" placeholder="раз" class="ri" aria-label="Повторения" value="'+esc(lr)+'"/></div>';
         h+='<div class="ap-actions">';
         h+='<button type="button" class="btn ap-start" data-ex="'+idx+'" data-set="'+s+'">Начать выполнение</button>';
         h+='<button type="button" class="btn ok ap-finish" data-ex="'+idx+'" data-set="'+s+'" style="display:none">Завершить подход</button>';
@@ -732,6 +909,7 @@ function openWorkout(){
   document.querySelectorAll("#rest-presets button").forEach(function(btn){
     btn.classList.toggle("on", +btn.dataset.sec===(S.restSec||120));
     btn.onclick=function(){
+      ensureAudio();
       S.restSec=+btn.dataset.sec;save();
       document.querySelectorAll("#rest-presets button").forEach(function(b){b.classList.remove("on")});
       btn.classList.add("on");
@@ -760,6 +938,7 @@ function openWorkout(){
 
   list.querySelectorAll(".ap-finish").forEach(function(b){
     b.onclick=function(){
+      ensureAudio();
       var ex=b.dataset.ex, set=+b.dataset.set;
       var row=document.getElementById("ap-"+ex+"-"+set);
       if(!row)return;
@@ -771,7 +950,7 @@ function openWorkout(){
       while(arr.length<=set)arr.push(null);
       arr[set]={w:w,r:r,done:true};
       S.calendar[ts].logs[key]=arr;
-      rememberWeight(data.type, ex, w);
+      rememberSet(data.type, ex, w, r);
       save();
       startRestTimer(S.restSec||120);
       toast("Подход завершён");
@@ -838,11 +1017,11 @@ function rWorkoutTab(){
   h+='<div class="card">';
   if(type&&type!=="rest"&&type!=="custom"){
     var plan=S.plan[type];
-    h+='<div style="margin-bottom:10px"><span class="bp '+tc(type)+'">'+tl(type)+'</span>';
-    if(data.done)h+=' <span style="color:var(--ok);font-weight:600">Выполнено</span>';
-    h+='</div>';
+    // Название типа тренировки не дублируем значком отдельно - оно уже в заголовке
+    // карточки ниже ("Название - N подходов"). Показываем только отметку "Выполнено".
+    if(data.done)h+='<div style="margin-bottom:10px"><span style="color:var(--ok);font-weight:600">Выполнено</span></div>';
     if(plan){
-      h+='<div style="font-weight:600;margin-bottom:8px;color:#8B7355">'+(plan.title||"")+(plan.approaches?" · "+plan.approaches:"")+'</div>';
+      h+='<div style="font-weight:600;margin-bottom:8px;color:#8B7355">'+esc(plan.title||"")+(plan.approaches?" · "+esc(plan.approaches):"")+'</div>';
       h+='<p class="mu" style="margin-bottom:14px;font-size:.88rem">'+plan.exercises.length+' упражнений в плане</p>';
     }
     h+='<div class="btn-row">';
@@ -863,9 +1042,9 @@ function rWorkoutTab(){
     S.plan[type].exercises.forEach(function(ex,idx){
       var logs=(data.logs&&data.logs[idx])?data.logs[idx]:[];
       h+='<div style="padding:10px 0;border-bottom:1px solid var(--bd)">';
-      h+='<div style="font-weight:500">'+ex.name+'</div>';
-      h+='<div class="mu" style="font-size:.8rem;white-space:nowrap">'+ex.sets+'</div>';
-      if(logs.length)h+='<div class="sl" style="margin-top:6px">'+logs.map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div>';
+      h+='<div style="font-weight:500">'+esc(ex.name)+'</div>';
+      h+='<div class="mu" style="font-size:.8rem;white-space:nowrap">'+esc(ex.sets)+'</div>';
+      if(logs.length)h+='<div class="sl" style="margin-top:6px">'+logs.filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div>';
       h+='</div>';
     });
     h+='</div>';
@@ -908,25 +1087,26 @@ document.getElementById("streak-label").textContent=" "+pl(st)+" подряд";
 const box=document.getElementById("today-content");
 const data=S.calendar[ts]||{type:null,notes:"",done:false,logs:{}};
 let type=data.type,h=showOnboardingHint();
-if(S.cycleAnchor){
-const c=gcd(ts);
-h+='<div class="chip"><span>Цикл '+(S.cycleLength||8)+' дн. - день <strong>Ц'+c+'</strong></span><button type="button" class="btn-cycle ghost" id="rebind">Сменить старт</button></div>';
-}else{
+if(!S.cycleAnchor){
 h+='<div class="chip"><span>Цикл ещё не начат</span><button type="button" class="btn-cycle" id="startc">Начать сегодня - Ц1</button></div>';
 }
 if(type){
-h+='<div style="margin-bottom:10px"><span class="bp '+tc(type)+'">'+tl(type)+'</span>'+(data.done?' <span style="color:var(--ok);font-weight:600">Выполнено</span>':'')+'</div>';
+// Название типа тренировки не дублируем отдельным значком - оно и так есть в
+// заголовке карточки ниже ("Низ 3 - 10 подходов"). Показываем только отметку
+// о выполнении, если тренировка уже сделана.
+if(data.done)h+='<div style="margin-bottom:10px"><span style="color:var(--ok);font-weight:600">Выполнено</span></div>';
 }else{
-h+='<p class="mu" style="margin-bottom:12px">Тип дня не назначен</p><div class="ts" id="tts" style="margin-bottom:14px"><button class="tb d1" data-type="1" type="button">Низ 1</button><button class="tb d2" data-type="2" type="button">Низ 2</button><button class="tb d3" data-type="3" type="button">Низ 3</button><button class="tb up" data-type="upper" type="button">Верх</button><button class="tb rs" data-type="rest" type="button">Отдых</button><button class="tb cu" data-type="custom" type="button">Своё</button></div>';
+h+='<p class="mu" style="margin-bottom:12px">Тип дня не назначен</p><div class="ts" id="tts" style="margin-bottom:14px"><button class="tb d1" data-type="1" type="button">'+esc(tl("1"))+'</button><button class="tb d2" data-type="2" type="button">'+esc(tl("2"))+'</button><button class="tb d3" data-type="3" type="button">'+esc(tl("3"))+'</button><button class="tb up" data-type="upper" type="button">'+esc(tl("upper"))+'</button><button class="tb rs" data-type="rest" type="button">'+esc(tl("rest"))+'</button><button class="tb cu" data-type="custom" type="button">Своё</button></div>';
 }
 if(type&&type!=="rest"&&type!=="custom"){
 const plan=S.plan[type];
 if(plan&&plan.exercises.length){
-h+='<div class="card" style="padding:12px"><div style="font-weight:600;margin-bottom:8px">'+plan.title+(plan.approaches?" - "+plan.approaches:"")+'</div>';
+h+='<div class="card" style="padding:12px"><div style="font-weight:600;margin-bottom:8px">'+esc(plan.title)+(plan.approaches?" - "+esc(plan.approaches):"")+'</div>';
 plan.exercises.forEach(function(ex,idx){
 const logs=(data.logs&&data.logs[idx])?data.logs[idx]:[];
 var lw=lastWeightFor(type,idx);
-h+='<div class="ex"><div class="nm">'+ex.name+'</div><div class="st">'+ex.sets+'</div><div class="elog"><label>Записать подход</label><input type="number" inputmode="decimal" placeholder="кг" class="wi" data-i="'+idx+'" value="'+lw+'"/><span class="x">x</span><input type="number" inputmode="numeric" placeholder="раз" class="ri" data-i="'+idx+'"/><button type="button" class="lb" data-i="'+idx+'">+</button></div><div class="sl" id="lg'+idx+'">'+logs.map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div><button type="button" class="undo-btn lg-undo" data-i="'+idx+'">Удалить последний подход</button></div>';
+var lr=lastRepsFor(type,idx);
+h+='<div class="ex"><div class="nm">'+esc(ex.name)+'</div><div class="st">'+esc(ex.sets)+'</div><div class="elog"><label>Записать подход</label><input type="number" inputmode="decimal" placeholder="кг" class="wi" aria-label="Вес, кг" data-i="'+idx+'" value="'+esc(lw)+'"/><span class="x">x</span><input type="number" inputmode="numeric" placeholder="раз" class="ri" aria-label="Повторения" data-i="'+idx+'" value="'+esc(lr)+'"/><button type="button" class="lb" data-i="'+idx+'">+</button></div><div class="sl" id="lg'+idx+'">'+logs.filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div><button type="button" class="undo-btn lg-undo" data-i="'+idx+'">Удалить последний подход</button></div>';
 });
 h+='</div>';
 }
@@ -941,9 +1121,9 @@ if(type&&type!=="rest"&&type!=="custom")h+='<button class="btn" id="start-wo" ty
 h+='<button class="btn '+(data.done?"ok":"")+'" id="tdone" type="button">'+(data.done?"Выполнено (снять)":"Отметить выполненной")+'</button><button class="btn sec" id="gocal" type="button">Открыть в календаре</button></div>';
 box.innerHTML=h;
 const sc=document.getElementById("startc");
-if(sc)sc.onclick=function(){S.cycleAnchor=ts;save();rToday();toast("Цикл начат")};
+if(sc)sc.onclick=function(){startNewCycleEpoch(ts);save();rToday();toast("Цикл начат")};
 const rb=document.getElementById("rebind");
-if(rb)rb.onclick=function(){S.cycleAnchor=ts;save();rToday();toast("Старт обновлён")};
+if(rb)rb.onclick=function(){startNewCycleEpoch(ts);save();rToday();toast("Старт обновлён")};
 document.querySelectorAll("#tts .tb").forEach(function(b){
 b.onclick=function(){
 if(!S.calendar[ts])S.calendar[ts]={type:null,notes:"",done:false,logs:{}};
@@ -959,10 +1139,10 @@ if(!S.calendar[ts])S.calendar[ts]={type:null,notes:"",done:false,logs:{}};
 if(!S.calendar[ts].logs)S.calendar[ts].logs={};
 if(!S.calendar[ts].logs[i])S.calendar[ts].logs[i]=[];
 S.calendar[ts].logs[i].push({w:w,r:r});
-rememberWeight(type, i, w);
+rememberSet(type, i, w, r);
 save();
 card.querySelector(".ri").value="";
-document.getElementById("lg"+i).innerHTML=S.calendar[ts].logs[i].map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
+document.getElementById("lg"+i).innerHTML=S.calendar[ts].logs[i].filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
 toast("Записано");
 };
 });
@@ -983,7 +1163,7 @@ b.onclick=function(){
 var i=b.dataset.i;
 if(!S.calendar[ts]||!S.calendar[ts].logs||!S.calendar[ts].logs[i]||!S.calendar[ts].logs[i].length){toast("Нечего удалять");return}
 S.calendar[ts].logs[i].pop();save();
-document.getElementById("lg"+i).innerHTML=(S.calendar[ts].logs[i]||[]).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
+document.getElementById("lg"+i).innerHTML=(S.calendar[ts].logs[i]||[]).filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
 toast("Удалено");
 };
 });
@@ -1005,15 +1185,14 @@ if(data&&data.notes)html+='<span class="dot"></span>';
 if(data&&data.done)html+='<span class="check">✓</span>';
 html+='<span class="num">'+d.getDate()+'</span>';
 var tags="";
-if(S.cycleAnchor){var cd=gcd(str);if(cd)tags+='<span class="bg cy">Ц'+cd+'</span>'}
 if(data&&data.type){
 var cl=tc(data.type);
-var tx=data.type==="rest"?"О":data.type==="upper"?"В":data.type==="custom"?"С":"Н"+data.type;
-tags+='<span class="bg '+cl+'">'+tx+'</span>';
-}
-if(data&&data.done&&data.type&&data.type!=="rest"){
+var label=tl(data.type);
+if(data.done&&data.type!=="rest"&&data.type!=="custom"){
 var pr=countWorkoutProgress(data.type, data.logs||{});
-if(pr.total>0)tags+='<span class="bg sum">'+pr.done+'/'+pr.total+'</span>';
+if(pr.total>0)label+=" · "+pr.done+"/"+pr.total;
+}
+tags+='<span class="bg '+cl+'">'+esc(label)+'</span>';
 }
 if(tags)html+='<div class="tags">'+tags+'</div>';
 cell.innerHTML=html;
@@ -1027,16 +1206,16 @@ document.getElementById("day-detail").style.display="block";
 document.getElementById("detail-title").textContent=dn(pd(ds)).replace(/^./,function(c){return c.toUpperCase()});
 const data=S.calendar[ds]||{type:null,notes:"",done:false,logs:{}};
 const ct=data.type||null;
-document.querySelectorAll("#type-select .tb").forEach(function(b){b.classList.toggle("on",b.dataset.type===ct)});
+document.querySelectorAll("#type-select .tb").forEach(function(b){b.classList.toggle("on",b.dataset.type===ct);if(b.dataset.type!=="custom")b.textContent=tl(b.dataset.type)});
 const cl=document.getElementById("cycle-info-line");
 if(S.cycleAnchor){
 const cd=gcd(ds);
 cl.innerHTML='<span>День цикла <strong>Ц'+cd+'</strong></span> <button type="button" class="btn-cycle ghost" id="sc1">Сделать Ц1</button> <button type="button" class="btn-cycle ghost" id="cc">Сбросить</button>';
-document.getElementById("sc1").onclick=function(){S.cycleAnchor=ds;save();rCal();showDet(ds);toast("Ц1")};
-document.getElementById("cc").onclick=function(){S.cycleAnchor=null;save();rCal();showDet(ds)};
+document.getElementById("sc1").onclick=function(){startNewCycleEpoch(ds);save();rCal();showDet(ds);toast("Ц1")};
+document.getElementById("cc").onclick=function(){clearCycle();save();rCal();showDet(ds)};
 }else{
 cl.innerHTML='<span>Цикл ещё не начат</span> <button type="button" class="btn-cycle" id="sc1">Начать - Ц1</button>';
-document.getElementById("sc1").onclick=function(){S.cycleAnchor=ds;save();rCal();showDet(ds);toast("Цикл начат")};
+document.getElementById("sc1").onclick=function(){startNewCycleEpoch(ds);save();rCal();showDet(ds);toast("Цикл начат")};
 }
 const eb=document.getElementById("detail-exercises");eb.innerHTML="";
 if(ct&&ct!=="rest"&&ct!=="custom"){
@@ -1045,7 +1224,8 @@ if(p&&p.exercises.length){
 let h="";
 p.exercises.forEach(function(ex,idx){
 const logs=(data.logs&&data.logs[idx])?data.logs[idx]:[];
-h+='<div class="ex"><div class="nm">'+ex.name+'</div><div class="st">'+ex.sets+'</div><div class="elog"><label>Записать подход</label><input type="number" inputmode="decimal" placeholder="кг" class="wi" data-i="'+idx+'"/><span class="x">x</span><input type="number" inputmode="numeric" placeholder="раз" class="ri" data-i="'+idx+'"/><button type="button" class="lb cal-log" data-i="'+idx+'">+</button></div><div class="sl" id="clg'+idx+'">'+logs.map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div></div>';
+const lw=lastWeightFor(ct,idx),lr=lastRepsFor(ct,idx);
+h+='<div class="ex"><div class="nm">'+esc(ex.name)+'</div><div class="st">'+esc(ex.sets)+'</div><div class="elog"><label>Записать подход</label><input type="number" inputmode="decimal" placeholder="кг" class="wi" aria-label="Вес, кг" data-i="'+idx+'" value="'+esc(lw)+'"/><span class="x">x</span><input type="number" inputmode="numeric" placeholder="раз" class="ri" aria-label="Повторения" data-i="'+idx+'" value="'+esc(lr)+'"/><button type="button" class="lb cal-log" data-i="'+idx+'">+</button></div><div class="sl" id="clg'+idx+'">'+logs.filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("")+'</div></div>';
 });
 eb.innerHTML=h;
 document.querySelectorAll(".cal-log").forEach(function(b){
@@ -1056,9 +1236,9 @@ if(!w&&!r)return;
 if(!S.calendar[ds])S.calendar[ds]={type:ct,notes:"",done:false,logs:{}};
 if(!S.calendar[ds].logs)S.calendar[ds].logs={};
 if(!S.calendar[ds].logs[i])S.calendar[ds].logs[i]=[];
-S.calendar[ds].logs[i].push({w:w,r:r});save();
+S.calendar[ds].logs[i].push({w:w,r:r});rememberSet(ct,i,w,r);save();
 card.querySelector(".wi").value="";card.querySelector(".ri").value="";
-document.getElementById("clg"+i).innerHTML=S.calendar[ds].logs[i].map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
+document.getElementById("clg"+i).innerHTML=S.calendar[ds].logs[i].filter(function(l){return l}).map(function(l){return '<span>'+(l.w||"-")+' кг x '+(l.r||"-")+'</span>'}).join("");
 toast("Записано");
 };
 });
@@ -1080,7 +1260,7 @@ const g=document.getElementById("plan-grid");g.innerHTML="";
 const p=S.plan[dk];if(!p)return;
 const card=document.createElement("div");card.className="pd";
 const hc=tc(dk);
-card.innerHTML='<div class="ph '+hc+'"><span>'+p.title+'</span><span style="font-weight:500;font-size:.85rem;opacity:.9">'+(p.approaches||"")+'</span></div><div class="pb" data-d="'+dk+'"></div>';
+card.innerHTML='<div class="ph '+hc+'"><span>'+esc(p.title)+'</span><span style="font-weight:500;font-size:.85rem;opacity:.9">'+esc(p.approaches||"")+'</span></div><div class="pb" data-d="'+dk+'"></div>';
 const body=card.querySelector(".pb");
 if(dk==="upper"){
 const row=document.createElement("div");row.className="tr";
@@ -1101,7 +1281,7 @@ ai.dataset.f="approaches";body.appendChild(ai);
 }
 (p.exercises||[]).forEach(function(ex,idx){
 const item=document.createElement("div");item.className="ei";
-item.innerHTML='<input type="text" value="'+(ex.name||"").replace(/"/g,"&quot;")+'" data-f="name" data-i="'+idx+'"/><input class="si" type="text" value="'+(ex.sets||"").replace(/"/g,"&quot;")+'" data-f="sets" data-i="'+idx+'"/><div class="ea"><button type="button" data-a="up" data-i="'+idx+'">↑</button><button type="button" data-a="dn" data-i="'+idx+'">↓</button><button type="button" data-a="del" data-i="'+idx+'">Удалить</button></div>';
+item.innerHTML='<input type="text" value="'+esc(ex.name||"")+'" data-f="name" data-i="'+idx+'"/><input class="si" type="text" value="'+esc(ex.sets||"")+'" data-f="sets" data-i="'+idx+'"/><div class="ea"><button type="button" data-a="up" data-i="'+idx+'">↑</button><button type="button" data-a="dn" data-i="'+idx+'">↓</button><button type="button" data-a="del" data-i="'+idx+'">Удалить</button></div>';
 body.appendChild(item);
 });
 if(dk!=="rest"){
@@ -1137,7 +1317,60 @@ save();rPlan();
 });
 }
 
+// Вес тела - отдельная от рабочих весов история, своя запись раз в день.
+function bwTodayStr(){return fd(new Date())}
+function logBodyWeight(kg){
+  if(!kg||kg<=0) return;
+  if(!S.bodyWeight) S.bodyWeight=[];
+  var ts=bwTodayStr();
+  var existing=S.bodyWeight.find(function(e){return e.date===ts});
+  if(existing) existing.kg=kg;
+  else S.bodyWeight.push({date:ts,kg:kg});
+  S.bodyWeight.sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0});
+  save();
+}
+function rBodyWeight(){
+  var sum=document.getElementById("bw-summary");
+  var bars=document.getElementById("bw-bars");
+  if(!sum||!bars) return;
+  var list=(S.bodyWeight||[]).slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0});
+  if(!list.length){
+    sum.textContent="Пока нет ни одной записи";
+    bars.innerHTML="";
+    return;
+  }
+  var first=list[0],last=list[list.length-1];
+  var diff=Math.round((last.kg-first.kg)*10)/10;
+  var diffTxt=diff===0?"без изменений с начала":(diff>0?"+"+diff:String(diff))+" кг с начала";
+  sum.textContent="Сейчас: "+last.kg+" кг \u00b7 "+diffTxt;
+  var recent=list.slice(-8);
+  var vals=recent.map(function(e){return e.kg});
+  var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+  var range=(mx-mn)||1;
+  bars.innerHTML=recent.map(function(e){
+    var h=Math.round(18+(e.kg-mn)/range*62);
+    var dt=pd(e.date);
+    var lbl=dt.toLocaleDateString("ru-RU",{day:"numeric",month:"numeric"});
+    return '<div class="bc"><div class="bar" style="height:'+h+'px"></div><div class="bl">'+e.kg+'</div><div class="bl" style="opacity:.65">'+lbl+'</div></div>';
+  }).join("");
+}
+// Мягкое напоминание сделать бэкап (Экспорт), чтобы не потерять данные - показываем
+// как спокойную строку рядом с самой кнопкой экспорта, а не отдельным баннером.
+function renderBackupHint(){
+  var bh=document.getElementById("backup-hint");
+  if(!bh) return;
+  if(!S.lastExportAt){
+    bh.textContent="Бэкап данных ещё ни разу не делали - на всякий случай стоит сохранить";
+    return;
+  }
+  var days=Math.floor((Date.now()-pd(S.lastExportAt).getTime())/86400000);
+  var txt=days<=0?"Последний бэкап: сегодня":"Последний бэкап: "+days+" "+pl(days)+" назад";
+  if(days>=30)txt+=" - можно обновить";
+  bh.textContent=txt;
+}
 function rStats(){
+rBodyWeight();
+renderBackupHint();
 const now=new Date(),y=now.getFullYear(),m=now.getMonth();
 let mc=0,tot=0;
 Object.keys(S.calendar).forEach(function(k){
@@ -1167,6 +1400,7 @@ bars.appendChild(col);
 });
 const created=S.createdAt?pd(S.createdAt):new Date();
 document.getElementById("deload-hint").style.display=Math.floor((Date.now()-created.getTime())/(7*86400000))>=6?"block":"none";
+rProgressChart();
 const lb=document.getElementById("log-content");
 if(!S.log.length)lb.innerHTML='<div class="empty">Нет отмеченных тренировок</div>';
 else{
@@ -1178,14 +1412,76 @@ return '<div class="li"><div><div style="font-weight:600">'+dt.toLocaleDateStrin
 lb.querySelectorAll("[data-i]").forEach(function(btn){
 btn.onclick=function(){
 const i=+btn.dataset.i;const ri=S.log.length-1-i;const date=items[i].date;
+const dl=pd(date).toLocaleDateString("ru-RU",{day:"numeric",month:"long"});
+showM("Удалить запись?","Тренировка от "+dl+" будет удалена из истории.",function(){
 S.log.splice(ri,1);
 if(S.calendar[date])S.calendar[date].done=false;
 save();rStats();rToday();rCal();
+});
 };
 });
 }
 }
 
+function collectExerciseOptions(){
+var opts=[];
+["1","2","3","upper"].forEach(function(type){
+var plan=S.plan[type];
+if(!plan||!plan.exercises)return;
+plan.exercises.forEach(function(ex,idx){
+opts.push({type:type,idx:idx,label:tl(type)+" \u2014 "+(ex.name||"")});
+});
+});
+return opts;
+}
+function exerciseHistory(type,idx,limit){
+var out=[];
+Object.keys(S.calendar).sort().forEach(function(date){
+var day=S.calendar[date];
+if(!day||day.type!==type||!day.logs)return;
+var arr=day.logs[String(idx)]||day.logs[idx];
+if(!arr||!arr.length)return;
+var maxW=0;
+arr.forEach(function(s){
+if(s&&s.w){var w=parseFloat(String(s.w).replace(",","."));if(!isNaN(w)&&w>maxW)maxW=w}
+});
+if(maxW>0)out.push({date:date,w:maxW});
+});
+if(limit)out=out.slice(-limit);
+return out;
+}
+function rProgressChart(){
+var sel=document.getElementById("progress-ex-select");
+var box=document.getElementById("progress-bars");
+var cap=document.getElementById("progress-caption");
+if(!sel||!box)return;
+var opts=collectExerciseOptions();
+if(!opts.length){
+sel.innerHTML="";
+box.innerHTML='<p class="mu" style="text-align:center;padding:12px 0">Пока нет упражнений в плане</p>';
+if(cap)cap.style.display="none";
+return;
+}
+if(cap)cap.style.display="block";
+var prevVal=sel.value;
+sel.innerHTML=opts.map(function(o){return '<option value="'+o.type+'|'+o.idx+'">'+esc(o.label)+'</option>'}).join("");
+var keys=opts.map(function(o){return o.type+"|"+o.idx});
+var val=(prevVal&&keys.indexOf(prevVal)!==-1)?prevVal:keys[0];
+sel.value=val;
+var parts=val.split("|"),type=parts[0],idx=+parts[1];
+var hist=exerciseHistory(type,idx,10);
+if(!hist.length){
+box.innerHTML='<p class="mu" style="text-align:center;padding:12px 0">Пока нет записей веса по этому упражнению</p>';
+return;
+}
+var mx=Math.max.apply(null,hist.map(function(h){return h.w}));
+box.innerHTML=hist.map(function(h){
+var dt=pd(h.date);
+var lbl=dt.toLocaleDateString("ru-RU",{day:"numeric",month:"numeric"});
+var barH=Math.max(4,Math.round(h.w/mx*70));
+return '<div class="bc"><div class="bar" style="height:'+barH+'px"></div><div class="bl">'+h.w+'</div><div class="bl" style="opacity:.65">'+lbl+'</div></div>';
+}).join("");
+}
 function sw(n){
 document.querySelectorAll(".ni").forEach(function(x){x.classList.toggle("on",x.dataset.tab===n)});
 document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on")});
@@ -1234,12 +1530,28 @@ save();showDet(SD);toast("Скопировано");
 };
 document.getElementById("clear-day").onclick=function(){
 if(!SD)return;
+showM("Очистить день?","Тип дня, все записанные подходы и заметки будут удалены без возможности восстановить.",function(){
 delete S.calendar[SD];
 S.log=S.log.filter(function(l){return l.date!==SD});
 save();showDet(SD);rCal();toast("Очищено");
+});
 };
 document.getElementById("share-progress").onclick=function(){
-const text="Мой прогресс\nСерия: "+streak()+" "+pl(streak())+"\nВсего: "+S.log.length;
+var lines=["Мой прогресс в тренировках"];
+lines.push("Серия: "+streak()+" "+pl(streak()));
+var shNow=new Date(),shY=shNow.getFullYear(),shM=shNow.getMonth();
+var shMc=0,shTot=0;
+Object.keys(S.calendar).forEach(function(k){
+  var d=S.calendar[k];
+  if(d&&d.done){shTot++;var dt=pd(k);if(dt.getFullYear()===shY&&dt.getMonth()===shM)shMc++}
+});
+lines.push("В этом месяце: "+shMc);
+lines.push("Всего отмечено: "+shTot);
+if(S.cycleAnchor){
+  var shTs=fd(shNow),shSeg=segmentFor(shTs),shLen=(shSeg&&shSeg.length)||S.cycleLength||8;
+  lines.push("Цикл: "+shLen+" дн., сегодня день Ц"+gcd(shTs));
+}
+const text=lines.join("\n");
 if(navigator.share)navigator.share({text:text}).catch(function(){});
 else if(navigator.clipboard)navigator.clipboard.writeText(text).then(function(){toast("Скопировано")}).catch(function(){alert(text)});
 else alert(text);
@@ -1248,7 +1560,26 @@ document.getElementById("export-data").onclick=function(){
 const a=document.createElement("a");
 a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));
 a.download="workout-"+fd(new Date())+".json";a.click();
+S.lastExportAt=fd(new Date());save();renderBackupHint();
 };
+var bwLogBtn=document.getElementById("bw-log");
+if(bwLogBtn)bwLogBtn.onclick=function(){
+var bwInp=document.getElementById("bw-input");
+var v=parseFloat((bwInp.value||"").replace(",","."));
+if(!v||v<=0){toast("Введи вес");return}
+logBodyWeight(v);
+bwInp.value="";
+rBodyWeight();
+toast("Записано: "+v+" кг");
+};
+function validateImport(p){
+if(!p||typeof p!=="object")return false;
+if(!p.plan||typeof p.plan!=="object")return false;
+if(!p.calendar||typeof p.calendar!=="object")return false;
+if(p.log&&!Array.isArray(p.log))return false;
+if(p.lastWeights&&typeof p.lastWeights!=="object")return false;
+return true;
+}
 document.getElementById("import-data").onclick=function(){
 const inp=document.createElement("input");inp.type="file";inp.accept="application/json";
 inp.onchange=function(e){
@@ -1257,7 +1588,7 @@ const r=new FileReader();
 r.onload=function(){
 try{
 const p=JSON.parse(r.result);
-if(p.plan&&p.calendar){Object.assign(S,p);save();rToday();rCal();rPlan();rStats();toast("Импорт OK")}
+if(validateImport(p)){Object.assign(S,p);save();rToday();rCal();rPlan();rStats();toast("Импорт OK")}
 else toast("Неверный файл");
 }catch(err){toast("Ошибка")}
 };
@@ -1265,19 +1596,30 @@ r.readAsText(f);
 };
 inp.click();
 };
-let mcb=null;
+let mcb=null,mcbFocusReturn=null;
+function closeModal(){
+document.getElementById("modal").classList.remove("on");
+if(mcbFocusReturn&&mcbFocusReturn.focus)try{mcbFocusReturn.focus()}catch(e){}
+mcbFocusReturn=null;
+}
 function showM(title,text,cb){
 document.getElementById("modal-title").textContent=title;
 document.getElementById("modal-text").textContent=text;
 document.getElementById("modal").classList.add("on");mcb=cb;
+mcbFocusReturn=document.activeElement;
+var cancelBtn=document.getElementById("modal-cancel");
+if(cancelBtn)setTimeout(function(){cancelBtn.focus()},0);
 }
-document.getElementById("modal-confirm").onclick=function(){document.getElementById("modal").classList.remove("on");if(mcb)mcb();mcb=null};
-document.getElementById("modal-cancel").onclick=function(){document.getElementById("modal").classList.remove("on");mcb=null};
+document.getElementById("modal-confirm").onclick=function(){closeModal();if(mcb)mcb();mcb=null};
+document.getElementById("modal-cancel").onclick=function(){closeModal();mcb=null};
+document.addEventListener("keydown",function(e){
+if(e.key==="Escape"&&document.getElementById("modal").classList.contains("on")){closeModal();mcb=null}
+});
 document.getElementById("reset-all").onclick=function(){
 showM("Сбросить всё?","Все данные будут удалены.",function(){
 try{if(SA)localStorage.removeItem("workoutTracker8")}catch(e){}
 MS.data=null;
-S={plan:JSON.parse(JSON.stringify(DP)),calendar:{},cycleAnchor:null,cycleLength:8,log:[],firstOpen:false,createdAt:new Date().toISOString().slice(0,10),lastWeights:{},restSec:120,hintDismissed:false};
+S={plan:JSON.parse(JSON.stringify(DP)),calendar:{},cycleAnchor:null,cycleLength:8,cycleEpochs:[],log:[],firstOpen:false,createdAt:new Date().toISOString().slice(0,10),lastWeights:{},restSec:120,hintDismissed:false,bodyWeight:[],lastExportAt:null};
 SD=null;document.getElementById("day-detail").style.display="none";
 save();rToday();rCal();rPlan();rStats();toast("Сброшено");
 });
@@ -1286,6 +1628,7 @@ function updateCycleDisplay(){const el=document.getElementById("cycle-len-displa
 document.getElementById("cycle-minus").onclick=function(){S.cycleLength=Math.max(2,(S.cycleLength||8)-1);save();updateCycleDisplay();rToday();rCal();toast("Цикл: "+S.cycleLength+" дн.")};
 document.getElementById("cycle-plus").onclick=function(){S.cycleLength=Math.min(21,(S.cycleLength||8)+1);save();updateCycleDisplay();rToday();rCal();toast("Цикл: "+S.cycleLength+" дн.")};
 document.getElementById("splash-go").onclick=function(){
+ensureAudio();
 S.firstOpen=false;save();
 document.getElementById("splash").classList.add("hide");
 setTimeout(function(){document.getElementById("splash").style.display="none"},400);
@@ -1294,7 +1637,45 @@ setTimeout(function(){document.getElementById("splash").style.display="none"},40
 document.getElementById("goto-today").onclick=function(){
 CM=new Date();CM.setDate(1);SD=fd(new Date());rCal();showDet(SD);
 };
-document.getElementById("auto-fill-cycle").onclick=function(){autoFillCycle(14)};
+document.getElementById("auto-fill-cycle").onclick=function(){
+  var btn=this;
+  var originalText=btn.textContent;
+  var filled=autoFillCycle(14);
+  if(filled===null){
+    // цикл ещё не начат: делаем это такой же заметной реакцией, как успех,
+    // а не просто тостом, который легко пропустить - и ведём туда, где это чинится
+    btn.classList.add("warn");
+    btn.textContent="⚠ Сначала начни цикл";
+    clearTimeout(btn._doneTimer);
+    btn._doneTimer=setTimeout(function(){
+      btn.classList.remove("warn");
+      btn.textContent=originalText;
+    },2500);
+    sw("today");
+    var startBtn=document.getElementById("startc");
+    if(startBtn){
+      startBtn.scrollIntoView({behavior:"smooth",block:"center"});
+      startBtn.classList.add("pulse-attn");
+      setTimeout(function(){startBtn.classList.remove("pulse-attn")},1700);
+    }
+    return;
+  }
+  // видимая реакция на сам тап: подсветка кнопки и временный текст с результатом
+  btn.classList.add("done");
+  btn.textContent=filled?("✓ Заполнено дней: "+filled):"✓ Уже всё заполнено";
+  clearTimeout(btn._doneTimer);
+  btn._doneTimer=setTimeout(function(){
+    btn.classList.remove("done");
+    btn.textContent=originalText;
+  },2500);
+  // и самое наглядное доказательство - сразу показываем календарь с расставленными тренировками
+  sw("calendar");
+  SD=fd(new Date());
+  rCal();
+  showDet(SD);
+  var cal=document.getElementById("calendar-days");
+  if(cal)cal.scrollIntoView({behavior:"smooth",block:"start"});
+};
 document.getElementById("wo-close").onclick=function(){closeWorkout()};
 document.getElementById("wo-finish").onclick=function(){
 var ts=fd(new Date());
@@ -1318,6 +1699,8 @@ if(sum){
 toast("Тренировка завершена");
 vibratePulse();
 };
+var progressExSelectEl=document.getElementById("progress-ex-select");
+if(progressExSelectEl)progressExSelectEl.onchange=function(){rProgressChart()};
 document.getElementById("wo-timer-skip").onclick=function(){
 if(woTimer){clearInterval(woTimer);woTimer=null}
 var box=document.getElementById("wo-timer-box");if(box)box.style.display="none";
@@ -1342,6 +1725,12 @@ load();
 updateCycleDisplay();
 if(!S.firstOpen)document.getElementById("splash").style.display="none";
 rToday();
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
 </script>
 </body>
 </html>
