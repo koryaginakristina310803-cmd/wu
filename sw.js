@@ -1,6 +1,6 @@
 // Минимальный service worker: кэширует оболочку приложения, чтобы трекер
 // открывался и без интернета (например, в зале с плохой связью).
-const CACHE_NAME = "workout-tracker-v2";
+const CACHE_NAME = "workout-tracker-v3";
 const ASSETS = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", function (e) {
